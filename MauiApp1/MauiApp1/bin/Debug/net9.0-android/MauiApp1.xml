@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MauiApp1</name>
+    </assembly>
+    <members>
+        <member name="T:MauiApp1.AppLogic.DTOs.UserDto">
+            <summary>
+            Example DTO for User - used to transfer data to/from UI
+            </summary>
+        </member>
+        <member name="T:MauiApp1.AppLogic.DTOs.CreateUserDto">
+            <summary>
+            DTO for creating a new user
+            </summary>
+        </member>
+        <member name="T:MauiApp1.AppLogic.DTOs.UpdateUserDto">
+            <summary>
+            DTO for updating an existing user
+            </summary>
+        </member>
+        <member name="T:MauiApp1.AppLogic.Mappings.MappingProfile">
+            <summary>
+            AutoMapper profile for mapping between entities and DTOs
+            Add your mappings here
+            </summary>
+        </member>
+        <member name="T:MauiApp1.AppLogic.Services.Implementations.UserService">
+            <summary>
+            Example service implementation for User operations
+            Implements business logic and uses repositories for data access
+            </summary>
+        </member>
+        <member name="T:MauiApp1.AppLogic.Services.Interfaces.IUserService">
+            <summary>
+            Example service interface for User operations
+            Define your business logic methods here
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Core.Entities.BaseEntity">
+            <summary>
+            Base entity for all domain entities with common properties
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Core.Entities.User">
+            <summary>
+            Example User entity - you can modify or create your own entities
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Core.Entities.BsonCollectionAttribute">
+            <summary>
+            Attribute to specify MongoDB collection name
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Core.Interfaces.IRepository`1">
+            <summary>
+            Generic repository interface for CRUD operations
+            </summary>
+            <typeparam name="T">Entity type that inherits from BaseEntity</typeparam>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.GetByIdAsync(System.String)">
+            <summary>
+            Get entity by ID
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.GetAllAsync">
+            <summary>
+            Get all entities (non-deleted)
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.FindAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Find entities matching a predicate
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.AddAsync(`0)">
+            <summary>
+            Add new entity
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.UpdateAsync(System.String,`0)">
+            <summary>
+            Update existing entity
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.DeleteAsync(System.String)">
+            <summary>
+            Soft delete entity (mark as deleted)
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.HardDeleteAsync(System.String)">
+            <summary>
+            Hard delete entity (permanently remove)
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Count entities matching a predicate
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Core.Interfaces.IRepository`1.ExistsAsync(System.String)">
+            <summary>
+            Check if entity exists
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Infrastructure.Configuration.MongoDbSettings">
+            <summary>
+            MongoDB connection settings
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Infrastructure.Data.MongoDbContext">
+            <summary>
+            MongoDB context for managing database connections and collections
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Infrastructure.Data.MongoDbContext.GetCollection``1(System.String)">
+            <summary>
+            Get a MongoDB collection
+            </summary>
+        </member>
+        <member name="P:MauiApp1.Infrastructure.Data.MongoDbContext.Database">
+            <summary>
+            Get the database instance
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Infrastructure.Data.Repositories.MongoRepository`1">
+            <summary>
+            Base MongoDB repository implementation
+            </summary>
+            <typeparam name="T">Entity type</typeparam>
+        </member>
+        <member name="T:MauiApp1.Services.DialogService">
+            <summary>
+            Implementation of IDialogService for displaying dialogs
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Services.IDialogService">
+            <summary>
+            Service for displaying dialogs and alerts from ViewModels
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.IDialogService.ShowAlertAsync(System.String,System.String,System.String)">
+            <summary>
+            Show a simple alert dialog
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.IDialogService.ShowConfirmAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            Show a confirmation dialog with Yes/No buttons
+            </summary>
+        </member>
+        <member name="T:MauiApp1.Services.INavigationService">
+            <summary>
+            Service for handling navigation between pages from ViewModels
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.INavigationService.NavigateToAsync``1">
+            <summary>
+            Navigate to a page associated with the specified ViewModel type
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.INavigationService.GoBackAsync">
+            <summary>
+            Navigate back to the previous page
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.INavigationService.NavigateToAsync(System.String)">
+            <summary>
+            Navigate to a specific route (for Shell-based navigation)
+            </summary>
+        </member>
+        <member name="M:MauiApp1.Services.NavigationService.GetNavigation">
+            <summary>
+            Gets the correct INavigation instance, handling FlyoutPage
+            </summary>
+        </member>
+        <member name="T:MauiApp1.ViewModels.BaseViewModel">
+            <summary>
+            Base class for all ViewModels providing common functionality
+            </summary>
+            <inheritdoc/>
+        </member>
+        <member name="P:MauiApp1.ViewModels.BaseViewModel.IsBusy">
+            <inheritdoc cref="F:MauiApp1.ViewModels.BaseViewModel.isBusy"/>
+        </member>
+        <member name="P:MauiApp1.ViewModels.BaseViewModel.Title">
+            <inheritdoc cref="F:MauiApp1.ViewModels.BaseViewModel.title"/>
+        </member>
+        <member name="T:MauiApp1.ViewModels.DashboardBarViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="F:MauiApp1.ViewModels.DashboardBarViewModel.homeCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.DashboardBarViewModel.HomeCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.DashboardBarViewModel.HomeCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.DashboardBarViewModel.Home"/>.</summary>
+        </member>
+        <member name="F:MauiApp1.ViewModels.DashboardBarViewModel.profileCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.DashboardBarViewModel.ProfileCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.DashboardBarViewModel.ProfileCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.DashboardBarViewModel.Profile"/>.</summary>
+        </member>
+        <member name="F:MauiApp1.ViewModels.DashboardBarViewModel.settingsCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.DashboardBarViewModel.SettingsCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.DashboardBarViewModel.SettingsCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.DashboardBarViewModel.Settings"/>.</summary>
+        </member>
+        <member name="F:MauiApp1.ViewModels.DashboardBarViewModel.logoutCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.DashboardBarViewModel.LogoutCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.DashboardBarViewModel.LogoutCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.DashboardBarViewModel.Logout"/>.</summary>
+        </member>
+        <member name="T:MauiApp1.ViewModels.DemoPageViewModel">
+            <inheritdoc/>
+        </member>
+        <member name="F:MauiApp1.ViewModels.DemoPageViewModel.goToMainPageCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.DemoPageViewModel.GoToMainPageCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.DemoPageViewModel.GoToMainPageCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.DemoPageViewModel.GoToMainPage"/>.</summary>
+        </member>
+        <member name="T:MauiApp1.ViewModels.MainPageViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:MauiApp1.ViewModels.MainPageViewModel.Counter">
+            <inheritdoc cref="F:MauiApp1.ViewModels.MainPageViewModel.counter"/>
+        </member>
+        <member name="P:MauiApp1.ViewModels.MainPageViewModel.CounterText">
+            <inheritdoc cref="F:MauiApp1.ViewModels.MainPageViewModel.counterText"/>
+        </member>
+        <member name="F:MauiApp1.ViewModels.MainPageViewModel.goToDemoPageCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.MainPageViewModel.GoToDemoPageCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.MainPageViewModel.GoToDemoPageCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.MainPageViewModel.GoToDemoPage"/>.</summary>
+        </member>
+        <member name="F:MauiApp1.ViewModels.MainPageViewModel.counterClickCommand">
+            <summary>The backing field for <see cref="P:MauiApp1.ViewModels.MainPageViewModel.CounterClickCommand"/>.</summary>
+        </member>
+        <member name="P:MauiApp1.ViewModels.MainPageViewModel.CounterClickCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:MauiApp1.ViewModels.MainPageViewModel.CounterClick"/>.</summary>
+        </member>
+        <member name="T:MauiApp1.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsBusy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Title">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Title" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Counter">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Counter" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CounterText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CounterText" generated properties.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsBusy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Title">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Title" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Counter">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Counter" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CounterText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CounterText" generated properties.</summary>
+        </member>
+    </members>
+</doc>
