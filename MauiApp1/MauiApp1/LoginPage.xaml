@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             x:Class="MauiApp1.LoginPage"
+             x:DataType="viewmodels:LoginPageViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Login">
+    <Grid RowDefinitions="*, Auto" Padding="30">
+        <VerticalStackLayout>
+            <Image Source="splash.png"
+                   HeightRequest="90"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20" />
+
+            <Label Text="Welcome!"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Please log in to continue"
+                   FontSize="26"
+                     HorizontalOptions="Center"
+                     Margin="0,0,0,30" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout>
+            <Label Text="Username" FontSize="18" Margin="20,250,0,5" />
+            <Entry Text="{Binding Username, Mode=TwoWay}"
+                   Placeholder="Enter your username"
+                   FontSize="16"
+                   HeightRequest="50"
+                   Margin="0,0,0,15"
+                   Keyboard="Default" />
+
+            <Label Text="Password" FontSize="18" Margin="20,0,0,5" />
+            <Entry Text="{Binding Password, Mode=TwoWay}"
+                   Placeholder="Enter your password"
+                   FontSize="16"
+                   HeightRequest="50"
+                   IsPassword="True"
+                   Margin="0,0,0,30"
+                   Keyboard="Default" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout>
+            <Button Text="Login"
+                    Command="{Binding LoginCommand}"
+                    Margin="0,450,0,0"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    FontSize="18"
+                    HeightRequest="50"
+                    CornerRadius="25" />
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

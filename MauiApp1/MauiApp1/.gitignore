@@ -1,0 +1,121 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+.vscode/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# MAUI Specific
+**/Resources/Raw/**/*.md
+**/Android/Resources/values/Strings.xml
+**/iOS/Resources/Assets.xcassets/**/Contents.json
+
+# Xamarin
+*.ipa
+*.apk
+*.aab
+
+# macOS
+.DS_Store
+*.userprefs
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Rider
+.idea/
+*.sln.iml
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+_ReSharper.*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# User-specific files (MauiApp1.csproj.user, etc.)
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+
+# Auto-generated files
+*.GeneratedMSBuildEditorConfig.editorconfig
+*.AssemblyInfo.cs
+*.AssemblyAttributes.cs
+
+# appsettings.json
+**/appsettings.json
+**/appsettings.*.json
+
+# But keep the template/example file (optional)
+!**/appsettings.example.json
+
+# Crash dumps
+*.stackdump
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Package manager lock files (optional - uncomment if you want to ignore)
+# packages.lock.json
+
+# Fody weavers
+FodyWeavers.xml
+FodyWeavers.xsd
+
+# Local History for Visual Studio
+.localhistory/
+
+# BeatPulse healthcheck temp database
+healthchecksdb

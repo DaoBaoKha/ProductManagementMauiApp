@@ -10,7 +10,10 @@ public class NavigationService : INavigationService
     {
         { typeof(MainPageViewModel), typeof(MainPage) },
         { typeof(DemoPageViewModel), typeof(DemoPage) },
-        { typeof(DashboardBarViewModel), typeof(DashboardBar) }
+        { typeof(DashboardBarViewModel), typeof(DashboardBar) },
+        { typeof(AddUserPageViewModel), typeof(AddUserPage) },
+        { typeof(LoginPageViewModel), typeof(LoginPage) },
+        { typeof(UserManagePageViewModel), typeof(UserManagePage) },
     };
 
     public NavigationService(IServiceProvider serviceProvider)
@@ -57,6 +60,49 @@ public class NavigationService : INavigationService
     public async Task NavigateToAsync(string route)
     {
         await Shell.Current.GoToAsync(route);
+    }
+
+    public async Task NavigateToAsyncAndClearStack<TViewModel>() where TViewModel : class
+    {
+        var viewModelType = typeof(TViewModel);
+        
+        if (!_viewModelPageMapping.TryGetValue(viewModelType, out var pageType))
+        {
+            throw new InvalidOperationException($"No page found for ViewModel type {viewModelType.Name}");
+        }
+
+        // Resolve the page from DI
+        var page = _serviceProvider.GetRequiredService(pageType) as Page;
+        
+        if (page == null)
+        {
+            throw new InvalidOperationException($"Could not resolve page of type {pageType.Name}");
+        }
+
+        // Replace the navigation stack by setting a new NavigationPage as Detail
+        var mainPage = Application.Current?.MainPage;
+        
+        if (mainPage is FlyoutPage flyoutPage)
+        {
+            // Create a new NavigationPage with the target page as root
+            var newNavigationPage = new NavigationPage(page)
+            {
+                BarBackgroundColor = Colors.LightBlue,
+                BarTextColor = Colors.White
+            };
+            
+            flyoutPage.Detail = newNavigationPage;
+            
+            // Close flyout if open
+            flyoutPage.IsPresented = false;
+        }
+        else
+        {
+            // Fallback: just navigate normally
+            await NavigateToAsync<TViewModel>();
+        }
+
+        await Task.CompletedTask;
     }
 
     /// <summary>

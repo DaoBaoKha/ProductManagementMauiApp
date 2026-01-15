@@ -12,10 +12,10 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            // Resolve MainPage from DI container
-            var mainPage = Services.GetRequiredService<MainPage>();
+            // start with login page
+            var loginPage = Services.GetRequiredService<LoginPage>();
             
-            var navigationPage = new NavigationPage(mainPage);
+            var navigationPage = new NavigationPage(loginPage);
             navigationPage.BarBackgroundColor = Colors.LightBlue;
             navigationPage.BarTextColor = Colors.White;
 

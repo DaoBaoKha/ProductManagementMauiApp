@@ -62,7 +62,7 @@ public class UserService : IUserService
     public async Task<IEnumerable<UserDto>> SearchUsersByNameAsync(string searchTerm)
     {
         var users = await _userRepository.FindAsync(u => 
-            u.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            //u.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             u.Username.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
         
         return _mapper.Map<IEnumerable<UserDto>>(users);

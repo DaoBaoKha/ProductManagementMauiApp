@@ -7,6 +7,9 @@ using MauiApp1.Infrastructure.Data.Repositories;
 using MauiApp1.Services;
 using MauiApp1.ViewModels;
 using System.Reflection;
+using MauiApp1.AppLogic.Services.Interfaces;
+using MauiApp1.AppLogic.Mappings;
+using MauiApp1.AppLogic.Services.Implementations;
 
 namespace MauiApp1
 {
@@ -44,12 +47,10 @@ namespace MauiApp1
             builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
 
             // Application Layer - AutoMapper
-            builder.Services.AddAutoMapper(typeof(MauiApp1.AppLogic.Mappings.MappingProfile));
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             // Application Layer - Services  
-            builder.Services.AddScoped<MauiApp1.AppLogic.Services.Interfaces.IUserService, 
-                MauiApp1.AppLogic.Services.Implementations.UserService>();
-            // TODO: Add more services here as you create them
+            builder.Services.AddScoped<IUserService, UserService>();
             // builder.Services.AddScoped<IProductService, ProductService>();
 
             // Presentation Layer - UI Services
@@ -60,18 +61,22 @@ namespace MauiApp1
             builder.Services.AddTransient<MainPageViewModel>();
             builder.Services.AddTransient<DemoPageViewModel>();
             builder.Services.AddTransient<DashboardBarViewModel>();
-            // TODO: Add more ViewModels here
+            builder.Services.AddTransient<AddUserPageViewModel>();
+            builder.Services.AddTransient<LoginPageViewModel>();
+            builder.Services.AddTransient<UserManagePageViewModel>();
             // builder.Services.AddTransient<UserListViewModel>();
 
             // Presentation Layer - Pages
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<DemoPage>();
             builder.Services.AddTransient<DashboardBar>();
-            // TODO: Add more pages here
+            builder.Services.AddTransient<AddUserPage>();
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<UserManagePage>();
             // builder.Services.AddTransient<UserListPage>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
