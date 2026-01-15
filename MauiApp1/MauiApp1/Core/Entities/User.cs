@@ -1,40 +1,24 @@
-using MauiApp1.Core.Entities;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace MauiApp1.Core.Entities;
-
-/// <summary>
-/// Example User entity - you can modify or create your own entities
-/// </summary>
-[BsonCollection("users")]
-public class User : BaseEntity
+namespace MauiApp1.Core.Entities
 {
-    [BsonElement("username")]
-    public string Username { get; set; } = string.Empty;
-
-    [BsonElement("email")]
-    public string Email { get; set; } = string.Empty;
-
-    [BsonElement("fullName")]
-    public string FullName { get; set; } = string.Empty;
-
-    [BsonElement("dateOfBirth")]
-    public DateTime DateOfBirth { get; set; }
-
-    [BsonElement("avatarUrl")]
-    public string AvatarUrl { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Attribute to specify MongoDB collection name
-/// </summary>
-[AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class BsonCollectionAttribute : Attribute
-{
-    public string CollectionName { get; }
-
-    public BsonCollectionAttribute(string collectionName)
+    public class User : BaseEntity
     {
-        CollectionName = collectionName;
+
+        [BsonElement("user_id")]
+        public string UserId { get; set; } = string.Empty;
+
+        [BsonElement("username")]
+        public string Username { get; set; } = string.Empty;
+
+        [BsonElement("password")]
+        public string Password { get; set; } = string.Empty;
+
+        [BsonElement("email")]
+        public string Email { get; set; } = string.Empty;
+
+        [BsonElement("role")]
+        public string Role { get; set; } = string.Empty;
+
     }
 }

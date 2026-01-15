@@ -7,11 +7,13 @@ namespace MauiApp1.ViewModels;
 public partial class DashboardBarViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigationService;
 
-    public DashboardBarViewModel(IDialogService dialogService)
+    public DashboardBarViewModel(IDialogService dialogService, INavigationService navigationService)
     {
         Title = "Dashboard";
         _dialogService = dialogService;
+        _navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -23,6 +25,7 @@ public partial class DashboardBarViewModel : BaseViewModel
     [RelayCommand]
     private async Task Profile()
     {
+        await _navigationService.NavigateToAsync<DemoPageViewModel>();
         await _dialogService.ShowAlertAsync("Dashboard", "Profile clicked");
     }
 
@@ -41,6 +44,7 @@ public partial class DashboardBarViewModel : BaseViewModel
         
         if (result)
         {
+            await _navigationService.NavigateToAsyncAndClearStack<LoginPageViewModel>();
             await _dialogService.ShowAlertAsync("Logout", "Logged out successfully");
         }
     }

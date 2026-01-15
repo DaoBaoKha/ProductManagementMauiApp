@@ -19,4 +19,9 @@ public interface INavigationService
     /// Navigate to a specific route (for Shell-based navigation)
     /// </summary>
     Task NavigateToAsync(string route);
+
+    /// <summary>
+    /// Navigate to a page and clear the navigation stack (no back button)
+    /// </summary>
+    Task NavigateToAsyncAndClearStack<TViewModel>() where TViewModel : class;
 }

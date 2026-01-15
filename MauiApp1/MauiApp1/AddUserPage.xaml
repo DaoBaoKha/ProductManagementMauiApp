@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             x:Class="MauiApp1.AddUserPage"
+             x:DataType="viewmodels:AddUserPageViewModel"
+             Title="Add New User">
+    <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+        <VerticalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center">
+            <Image Source="dotnet_bot.png" HeightRequest="80" />
+            <Label Text="Input User Information" FontSize="20" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="15" VerticalOptions="Center">
+            <Label Text="Name:" />
+            <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="Input Name" />
+
+            <Label Text="Email:" />
+            <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Input Email" Keyboard="Email" />
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2" Text="Save" 
+                Command="{Binding SaveUserCommand}"
+                HeightRequest="50" CornerRadius="25" Margin="0,0,0,10"/>
+    </Grid>
+</ContentPage>

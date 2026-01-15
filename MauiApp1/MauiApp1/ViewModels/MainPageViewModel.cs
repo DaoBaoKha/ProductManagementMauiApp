@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiApp1.AppLogic.DTOs;
 using MauiApp1.Services;
+using System.Collections.ObjectModel;
 
 namespace MauiApp1.ViewModels;
 
@@ -9,10 +11,9 @@ public partial class MainPageViewModel : BaseViewModel
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
-    private int counter;
+    bool isRefreshing;
 
-    [ObservableProperty]
-    private string counterText = "Click me";
+    public ObservableCollection<UserDto> Users { get; } = new();
 
     public MainPageViewModel(INavigationService navigationService)
     {
@@ -21,19 +22,8 @@ public partial class MainPageViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task GoToDemoPage()
+    async Task GoToUserManagePage()
     {
-        // Navigate to DemoPage using NavigationService
-        await _navigationService.NavigateToAsync<DemoPageViewModel>();
-    }
-
-    [RelayCommand]
-    private async Task CounterClick()
-    {
-        Counter++;
-
-        CounterText = $"You clicked {Counter} time{(Counter == 1 ? "" : "s")}";
-
-        await Task.CompletedTask;
+        await _navigationService.NavigateToAsync<UserManagePageViewModel>();
     }
 }
