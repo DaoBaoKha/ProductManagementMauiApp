@@ -25,7 +25,7 @@ public partial class DashboardBarViewModel : BaseViewModel
     [RelayCommand]
     private async Task Profile()
     {
-        await _navigationService.NavigateToAsync<DemoPageViewModel>();
+        await _navigationService.NavigateToAsync<ProfilePageViewModel>();
         await _dialogService.ShowAlertAsync("Dashboard", "Profile clicked");
     }
 

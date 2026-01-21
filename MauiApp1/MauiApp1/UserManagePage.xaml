@@ -10,43 +10,194 @@
         <ToolbarItem Text="Add User" Command="{Binding GoToAddUserPageCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto, *">
-        <Label Grid.Row="0" Text="User Management" 
-             FontSize="24" FontAttributes="Bold" 
-             Padding="20,10" TextColor="#512BD4"/>
+    <!-- ROOT GRID -->
+    <Grid>
+        
+        <!-- MAIN CONTENT GRID -->
+        <Grid RowDefinitions="Auto, *">
+            
+            <!-- Title -->
+            <Label Grid.Row="0" 
+                   Text="User Management" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   Padding="20,10" 
+                   TextColor="#512BD4"/>
 
-        <RefreshView Grid.Row="1" 
-                   IsRefreshing="{Binding IsRefreshing}"
-                   Command="{Binding LoadUserCommand}">
+            <RefreshView Grid.Row="1" 
+                         IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding LoadUserCommand}">
 
-            <CollectionView ItemsSource="{Binding Users}" 
-                          SelectionMode="Single"
-                          SelectionChangedCommand="{Binding SelectUserCommand}"
-                          SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <!-- USERS LIST -->
+                <CollectionView ItemsSource="{Binding Users}" 
+                                SelectionMode="Single"
+                                SelectionChangedCommand="{Binding SelectUserCommand}"
+                                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
 
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                        <Image Source="dotnet_bot.png" HeightRequest="100" />
-                        <Label Text="No data yet please insert!" TextColor="Gray"/>
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Source="dotnet_bot.png" HeightRequest="100" />
+                            <Label Text="No data yet please insert!" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                    <!-- USER ITEM -->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dtos:UserDto">
+                            <Frame Margin="10,5" Padding="10" CornerRadius="8" HasShadow="True">
+                                <Grid ColumnDefinitions="Auto, *">
+                                    
+                                    <Image Grid.Column="0" 
+                                           Source="dotnet_bot.png" 
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           Margin="0,0,10,0"/>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding FullName}" FontSize="16" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Email}" FontSize="12" TextColor="Gray"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="2" 
+                                            Text="View Detail" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:UserManagePageViewModel}}, Path=ShowUserDetailsCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="#512BD4" 
+                                            TextColor="White" 
+                                            FontSize="14" 
+                                            HeightRequest="30" 
+                                            WidthRequest="85"
+                                            Padding="0"
+                                            Margin="80,0,0,0"
+                                            VerticalOptions="Center"/>
+
+                                    <Button Grid.Column="3" 
+                                            Text="Delete" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:UserManagePageViewModel}}, Path=DeleteUserCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="#D32F2F" 
+                                            TextColor="White" 
+                                            FontSize="14" 
+                                            HeightRequest="30" 
+                                            WidthRequest="60"
+                                            Padding="0"
+                                            Margin="250,0,0,0"
+                                            VerticalOptions="Center"/>      
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+
+        <!-- POPUP OVERLAY -->
+        <!-- IsVisible binding với IsPopupOpen từ ViewModel -->
+        <Grid IsVisible="{Binding IsPopupOpen}" 
+              BackgroundColor="#80000000">
+            
+            <!-- POPUP CARD -->
+            <Frame WidthRequest="350" 
+                   HeightRequest="500"
+                   CornerRadius="15" 
+                   BackgroundColor="White"
+                   Padding="20"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center">
+                
+                <VerticalStackLayout Spacing="15">
+                    
+                    <Label Text="User Details" 
+                           FontSize="22" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="#512BD4"
+                           Margin="0,0,0,10"/>
+                    
+                    <Image Source="dotnet_bot.png" 
+                           HeightRequest="100" 
+                           WidthRequest="100"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,10"/>
+                    
+                    <!-- USER INFORMATION -->
+                    <VerticalStackLayout Spacing="12">
+                        
+                        <!-- Full Name -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Full Name: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.FullName}" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- Email -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Email: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.Email}" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- Username -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Username: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.Username}" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- Date of Birth -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Date of Birth: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.DateOfBirth, StringFormat='{0:dd/MM/yyyy}'}" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- Age -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Age: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.Age}" TextColor="Black"/>
+                                    <Span Text=" years old" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <!-- User ID -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="User ID: " FontAttributes="Bold" TextColor="#666"/>
+                                    <Span Text="{Binding SelectedUser.Id}" TextColor="#999" FontSize="12"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
                     </VerticalStackLayout>
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="dtos:UserDto">
-                        <Frame Margin="10,5" Padding="10" CornerRadius="8" HasShadow="True">
-                            <Grid ColumnDefinitions="Auto, *">
-                                <Image Grid.Column="0" Source="dotnet_bot.png" 
-                                     HeightRequest="50" WidthRequest="50" Margin="0,0,10,0"/>
-
-                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                    <Label Text="{Binding FullName}" FontSize="16" FontAttributes="Bold"/>
-                                    <Label Text="{Binding Email}" FontSize="12" TextColor="Gray"/>
-                                </VerticalStackLayout>
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+                    
+                    <!-- CLOSE BUTTON -->
+                    <Button Text="Close" 
+                            Command="{Binding ClosePopupCommand}"
+                            BackgroundColor="#512BD4"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="45"
+                            Margin="0,15,0,0"/>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+        
     </Grid>
+    <!-- END ROOT GRID -->
 </ContentPage>

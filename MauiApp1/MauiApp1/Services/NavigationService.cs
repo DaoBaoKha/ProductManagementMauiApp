@@ -14,6 +14,9 @@ public class NavigationService : INavigationService
         { typeof(AddUserPageViewModel), typeof(AddUserPage) },
         { typeof(LoginPageViewModel), typeof(LoginPage) },
         { typeof(UserManagePageViewModel), typeof(UserManagePage) },
+        { typeof(ProductManagePageViewModel), typeof(ProductManagePage) },
+        { typeof(ProfilePageViewModel), typeof(ProfilePage) },
+        { typeof(ProfileImagePageViewModel), typeof(ProfileImagePage) },
     };
 
     public NavigationService(IServiceProvider serviceProvider)
@@ -22,6 +25,11 @@ public class NavigationService : INavigationService
     }
 
     public async Task NavigateToAsync<TViewModel>() where TViewModel : class
+    {
+        await NavigateToAsync<TViewModel>(null);
+    }
+
+    public async Task NavigateToAsync<TViewModel>(IDictionary<string, object> parameters) where TViewModel : class
     {
         var viewModelType = typeof(TViewModel);
         
@@ -36,6 +44,12 @@ public class NavigationService : INavigationService
         if (page == null)
         {
             throw new InvalidOperationException($"Could not resolve page of type {pageType.Name}");
+        }
+
+        // Pass parameters if ViewModel implements IQueryAttributable
+        if (parameters != null && page.BindingContext is IQueryAttributable queryAttributable)
+        {
+            queryAttributable.ApplyQueryAttributes(parameters);
         }
 
         // Get the correct navigation (handle FlyoutPage)
@@ -60,6 +74,11 @@ public class NavigationService : INavigationService
     public async Task NavigateToAsync(string route)
     {
         await Shell.Current.GoToAsync(route);
+    }
+
+    public async Task NavigateToAsync(string route, IDictionary<string, object> parameters)
+    {
+        await Shell.Current.GoToAsync(route, parameters);
     }
 
     public async Task NavigateToAsyncAndClearStack<TViewModel>() where TViewModel : class

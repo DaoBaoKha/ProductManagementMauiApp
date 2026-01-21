@@ -13,6 +13,12 @@ namespace MauiApp1.ViewModels
         [ObservableProperty]
         bool isRefreshing;
 
+        [ObservableProperty]
+        bool isPopupOpen;
+
+        [ObservableProperty]
+        UserDto selectedUser;
+
         public ObservableCollection<UserDto> Users { get; } = new();
 
         public UserManagePageViewModel(INavigationService navigationService)
@@ -59,6 +65,23 @@ namespace MauiApp1.ViewModels
         async Task GoToAddUserPage()
         {
             await _navigationService.NavigateToAsync<AddUserPageViewModel>();
+        }
+
+        [RelayCommand]
+        void ShowUserDetails(UserDto user)
+        {
+            if(user == null)
+                return;
+
+            SelectedUser = user;
+            IsPopupOpen = true;
+        }
+
+        [RelayCommand]
+        void ClosePopup()
+        {
+            IsPopupOpen = false;
+            SelectedUser = null;
         }
     }
 }

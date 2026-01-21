@@ -26,4 +26,10 @@ public partial class MainPageViewModel : BaseViewModel
     {
         await _navigationService.NavigateToAsync<UserManagePageViewModel>();
     }
+
+    [RelayCommand]
+    async Task GoToProductManagePage()
+    {
+        await _navigationService.NavigateToAsync<ProductManagePageViewModel>();
+    }
 }

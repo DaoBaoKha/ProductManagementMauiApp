@@ -64,7 +64,9 @@ namespace MauiApp1
             builder.Services.AddTransient<AddUserPageViewModel>();
             builder.Services.AddTransient<LoginPageViewModel>();
             builder.Services.AddTransient<UserManagePageViewModel>();
-            // builder.Services.AddTransient<UserListViewModel>();
+            builder.Services.AddTransient<ProductManagePageViewModel>();
+            builder.Services.AddTransient<ProfilePageViewModel>();
+            builder.Services.AddTransient<ProfileImagePageViewModel>();
 
             // Presentation Layer - Pages
             builder.Services.AddTransient<MainPage>();
@@ -73,7 +75,9 @@ namespace MauiApp1
             builder.Services.AddTransient<AddUserPage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<UserManagePage>();
-            // builder.Services.AddTransient<UserListPage>();
+            builder.Services.AddTransient<ProductManagePage>();
+            builder.Services.AddTransient<ProfilePage>();
+            builder.Services.AddTransient<ProfileImagePage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
