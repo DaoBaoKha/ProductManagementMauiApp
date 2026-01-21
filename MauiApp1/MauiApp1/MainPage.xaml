@@ -18,7 +18,7 @@
                Margin="20,20,20,10" />
 
             <Button Text="Product Management"
-               Command="{Binding NavigateToAddUserPageCommand}"
+               Command="{Binding GoToProductManagePageCommand}"
                BackgroundColor="#512BD4"
                TextColor="White"
                FontSize="18"

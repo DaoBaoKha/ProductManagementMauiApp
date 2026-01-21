@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             xmlns:behaviors="clr-namespace:MauiApp1.Behaviors"
              x:Class="MauiApp1.AddUserPage"
              x:DataType="viewmodels:AddUserPageViewModel"
              Title="Add New User">
@@ -13,7 +14,11 @@
 
         <VerticalStackLayout Grid.Row="1" Spacing="15" VerticalOptions="Center">
             <Label Text="Name:" />
-            <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="Input Name" />
+            <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="Input Name">
+                <Entry.Behaviors>
+                    <behaviors:NumericValidationBehavior />
+                </Entry.Behaviors>
+            </Entry>
 
             <Label Text="Email:" />
             <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Input Email" Keyboard="Email" />
