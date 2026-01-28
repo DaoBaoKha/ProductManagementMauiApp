@@ -12,23 +12,44 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            // start with login page
+            // Start with login page (outside Shell) - Option A
+            return new Window(CreateLoginPage());
+        }
+
+        /// <summary>
+        /// Creates a NavigationPage with LoginPage as root
+        /// </summary>
+        private NavigationPage CreateLoginPage()
+        {
             var loginPage = Services.GetRequiredService<LoginPage>();
-            
-            var navigationPage = new NavigationPage(loginPage);
-            navigationPage.BarBackgroundColor = Colors.LightBlue;
-            navigationPage.BarTextColor = Colors.White;
-
-            // Resolve DashboardBar from DI container
-            var dashboardBar = Services.GetRequiredService<DashboardBar>();
-            
-            var flyoutPage = new FlyoutPage
+            return new NavigationPage(loginPage)
             {
-                Flyout = dashboardBar,
-                Detail = navigationPage
+                BarBackgroundColor = Colors.LightBlue,
+                BarTextColor = Colors.White
             };
+        }
 
-            return new Window(flyoutPage);
+        /// <summary>
+        /// Called after successful login - navigates to main app (Shell)
+        /// </summary>
+        public void NavigateToMainApp()
+        {
+            var shell = Services.GetRequiredService<AppShell>();
+            if (Windows.Count > 0)
+            {
+                Windows[0].Page = shell;
+            }
+        }
+
+        /// <summary>
+        /// Called on logout - navigates back to login page
+        /// </summary>
+        public void NavigateToLogin()
+        {
+            if (Windows.Count > 0)
+            {
+                Windows[0].Page = CreateLoginPage();
+            }
         }
     }
 }

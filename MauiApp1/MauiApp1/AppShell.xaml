@@ -4,11 +4,107 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MauiApp1"
-    Title="MauiApp1">
+    FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="LightGray"
+    Shell.NavBarHasShadow="True">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Custom Title View -->
+    <Shell.TitleView>
+        <Grid>
+            <Label Text="Management Mobile App "
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="10,0,0,0"/>
+        </Grid>
+    </Shell.TitleView>
+
+    <!-- Shell Styling -->
+    <Shell.Resources>
+        <Style TargetType="Shell" ApplyToDerivedTypes="True">
+            <Setter Property="Shell.BackgroundColor" Value="{StaticResource White}" />
+            <Setter Property="Shell.ForegroundColor" Value="{StaticResource Black}" />
+            <Setter Property="Shell.TitleColor" Value="{StaticResource Black}" />
+        </Style>
+    </Shell.Resources>
+
+    <!-- Custom Flyout Item Template -->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid Padding="15,10" ColumnDefinitions="Auto, *">
+                <!-- Icon placeholder -->
+                <Image Grid.Column="0"
+                       Source="{Binding FlyoutIcon}"
+                       HeightRequest="24"
+                       WidthRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,15,0"/>
+                
+                <!-- Custom styling title -->
+                <Label Grid.Column="1"
+                       Text="{Binding Title}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <!-- Custom Menu Item Template -->
+    <Shell.MenuItemTemplate>
+        <DataTemplate>
+            <Grid Padding="15,10" ColumnDefinitions="Auto, *">
+                <!-- Icon for FlyoutItem -->
+                <Image Grid.Column="0"
+                       Source="dotnet_bot.png"
+                       HeightRequest="24"
+                       WidthRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,15,0"/>
+                
+                <!-- Text and styling for FlyoutItem -->
+                <Label Grid.Column="1"
+                       Text="{Binding Text}"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.MenuItemTemplate>
+
+    <!-- Flyout Header -->
+    <Shell.FlyoutHeader>
+        <Grid HeightRequest="150" BackgroundColor="{StaticResource Secondary}" Padding="20">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="dotnet_bot.png" HeightRequest="60" WidthRequest="60" />
+                <Label Text="Menu" 
+                       TextColor="Black" 
+                       FontSize="20" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,10,0,0" />
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Main Navigation Items -->
+    <FlyoutItem Title="Home" FlyoutIcon="dotnet_bot.png">
+        <ShellContent 
+            Route="main" 
+            ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+    
+    
+    <FlyoutItem Title="Profile" Route="profile" FlyoutIcon="dotnet_bot.png">
+        <ShellContent ContentTemplate="{DataTemplate local:ProfilePage}" />
+    </FlyoutItem>
+
+    <!-- Logout Menu Item (action only, not navigation) -->
+    <MenuItem Text="Logout" Clicked="OnLogoutClicked" />
 
 </Shell>
+

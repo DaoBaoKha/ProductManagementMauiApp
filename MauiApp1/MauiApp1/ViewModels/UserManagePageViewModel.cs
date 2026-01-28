@@ -20,6 +20,9 @@ namespace MauiApp1.ViewModels
         UserDto selectedUser;
 
         public ObservableCollection<UserDto> Users { get; } = new();
+        
+        // Store all users for search filtering
+        private List<UserDto> AllUsers { get; set; } = new();
 
         public UserManagePageViewModel(INavigationService navigationService)
         {
@@ -36,9 +39,10 @@ namespace MauiApp1.ViewModels
             IsRefreshing = true;
             await Task.Delay(2000); // Simulate a data load
 
+            AllUsers.Clear();
             Users.Clear();
 
-            Users.Add(new UserDto
+            var user1 = new UserDto
             {
                 Id = "1",
                 Username = "daobaokha",
@@ -46,9 +50,9 @@ namespace MauiApp1.ViewModels
                 FullName = "Dao Bao Kha",
                 DateOfBirth = new DateTime(2004, 09, 25),
                 AvatarUrl = "https://example.com/avatar1.png"
-            });
+            };
 
-            Users.Add(new UserDto
+            var user2 = new UserDto
             {
                 Id = "2",
                 Username = "baokha",
@@ -56,9 +60,56 @@ namespace MauiApp1.ViewModels
                 FullName = "Bao Kha",
                 DateOfBirth = new DateTime(2004, 09, 24),
                 AvatarUrl = "https://example.com/avatar1.png"
-            });
+            };
+
+            AllUsers.Add(user1);
+            AllUsers.Add(user2);
+            
+            Users.Add(user1);
+            Users.Add(user2);
 
             IsRefreshing = false;
+        }
+
+        [RelayCommand]
+        void SearchUser(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                // Show all users if search is empty
+                Users.Clear();
+                foreach (var user in AllUsers)
+                {
+                    Users.Add(user);
+                }
+            }
+            else
+            {
+                // Filter users by name, email, or username
+                var filteredUsers = AllUsers.Where(u =>
+                    u.FullName.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    u.Email.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    u.Username.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                ).ToList();
+
+                Users.Clear();
+                foreach (var user in filteredUsers)
+                {
+                    Users.Add(user);
+                }
+            }
+        }
+
+        [RelayCommand]
+        async Task DeleteUser(UserDto user)
+        {
+            if (user == null)
+                return;
+
+            AllUsers.Remove(user);
+            Users.Remove(user);
+            
+            await Application.Current.MainPage.DisplayAlert("Success", $"User {user.FullName} deleted!", "OK");
         }
 
         [RelayCommand]

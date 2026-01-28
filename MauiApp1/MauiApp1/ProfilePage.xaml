@@ -1,81 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             xmlns:converters="clr-namespace:MauiApp1.Converters"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:DataType="viewmodels:ProfilePageViewModel"
              x:Class="MauiApp1.ProfilePage"
-             Title="Profile Page">
+             Title="Profile Page"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource OffBlack}}">
+
+    <ContentPage.Resources>
+        <!-- Converter for DateOnly to DateTime -->
+        <converters:DateOnlyToDateTimeConverter x:Key="DateOnlyToDateTimeConverter" />
+        
+        <Style TargetType="Entry">
+            <Setter Property="IsReadOnly" Value="{Binding IsNotEditing}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalOptions" Value="Center" />
+
+            <Style.Triggers>
+                <Trigger TargetType="Entry" Property="IsReadOnly" Value="False">
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource PrimaryDark}}" />
+                    <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                    <Setter Property="PlaceholderColor" Value="{StaticResource PrimaryDark}" />
+                    <Setter Property="Opacity" Value="1" />
+                </Trigger>
+
+                <Trigger TargetType="Entry" Property="IsReadOnly" Value="True">
+                    <Setter Property="BackgroundColor" Value="Transparent" />
+                    <Setter Property="Opacity" Value="0.8" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Style for DatePicker -->
+        <Style TargetType="DatePicker">
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Format" Value="dd/MM/yyyy" />
+        </Style>
+    </ContentPage.Resources>
+
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
-            
-            <!-- Header Section -->
-            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Border Stroke="{StaticResource Primary}"
                         StrokeThickness="2"
                         StrokeShape="RoundRectangle 60"
-                        HeightRequest="100"
+                        HeightRequest="120"
                         WidthRequest="120"
                         HorizontalOptions="Center">
-                    <Image Source="{Binding SelectedProfile.AvatarUrl, TargetNullValue='dotnet_bot.png', FallbackValue='dotnet_bot.png'}"
-                           Aspect="AspectFill"
-                           HeightRequest="100"
-                           WidthRequest="100">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ViewImageCommand}" NumberOfTapsRequired="2" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                    <Grid>
+                        <!-- Profile Image -->
+                        <Image Source="{Binding SelectedProfile.AvatarUrl, TargetNullValue='dotnet_bot.png', FallbackValue='dotnet_bot.png'}"
+                               Aspect="AspectFill"
+                               HeightRequest="120"
+                               WidthRequest="120">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewImageCommand}" NumberOfTapsRequired="2" />
+                            </Image.GestureRecognizers>
+                        </Image>
+
+                        <!-- Edit Overlay (Visible only when IsEditing) -->
+                        <Grid BackgroundColor="{StaticResource PopupOverlayColor}"
+                              IsVisible="{Binding IsEditing}">
+                            <Image Source="camera_icon.png" 
+                                   HeightRequest="40" 
+                                   WidthRequest="40" 
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center"
+                                   Opacity="0.8">
+                                <!-- Fallback if no icon, use text or simple shape, but for now assuming we might have or standard material font -->
+                            </Image>
+                            <Label Text="Edit" 
+                                   TextColor="White" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,20"/>
+                            
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ChangeAvatarCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Grid>
                 </Border>
-                
+
                 <Label Text="{Binding SelectedProfile.Fullname}"
-                       Style="{StaticResource Headline}"
-                       TextColor="{StaticResource Primary}" 
-                       Padding="10"/>
-                
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+
                 <Label Text="{Binding SelectedProfile.JobTitle}"
                        FontSize="16"
-                       TextColor="{StaticResource Gray500}"
-                       HorizontalOptions="Center" 
-                       Margin="0,-10,0,0"/>
+                       TextColor="Gray"
+                       HorizontalOptions="Center"
+                       Margin="0,-5,0,0"/>
             </VerticalStackLayout>
 
-            <!-- Details Section -->
-            <Border Stroke="{StaticResource Gray200}"
+            <Border Stroke="LightGray"
                     StrokeThickness="1"
-                    StrokeShape="RoundRectangle 10"
-                    Padding="10"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-                
+                    StrokeShape="RoundRectangle 15"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
                 <VerticalStackLayout Spacing="15">
+
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
-                        <Label Text="Full Name" TextColor="{StaticResource Gray500}" FontSize="12" />
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Fullname}" IsReadOnly="True" />
+                        <Label Text="Full Name" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Fullname}">
+                            <Entry.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
+                            </Entry.GestureRecognizers>
+                        </Entry>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
-                        <Label Text="Email" TextColor="{StaticResource Gray500}" FontSize="12" />
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Email}" IsReadOnly="True" />
+                        <Label Text="Email" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Email}" Keyboard="Email">
+                            <Entry.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
+                            </Entry.GestureRecognizers>
+                        </Entry>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
-                        <Label Text="Phone" TextColor="{StaticResource Gray500}" FontSize="12" />
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.PhoneNumber}" IsReadOnly="True" />
+                        <Label Text="Phone Number" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.PhoneNumber}" Keyboard="Telephone">
+                            <Entry.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
+                            </Entry.GestureRecognizers>
+                        </Entry>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
-                        <Label Text="Address" TextColor="{StaticResource Gray500}" FontSize="12" />
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Address}" IsReadOnly="True" />
+                        <Label Text="Address" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Address}">
+                            <Entry.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
+                            </Entry.GestureRecognizers>
+                        </Entry>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
-                        <Label Text="Date Of Birth" TextColor="{StaticResource Gray500}" FontSize="12" />
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.DateOfBirth}" IsReadOnly="True" />
+                        <Label Text="Date Of Birth" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                        
+                        <!-- Grid container for DatePicker and overlay -->
+                        <Grid Grid.Row="1">
+                            <!-- DatePicker -->
+                            <DatePicker Date="{Binding SelectedProfile.DateOfBirth, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                                        MinimumDate="1900-01-01"
+                                        MaximumDate="{x:Static sys:DateTime.Now}"/>
+                            
+                            <!-- Overlay transparent -->
+                            <Grid BackgroundColor="Transparent">
+                                <Grid.Triggers>
+                                    <!-- IsEditing = true -> overlay hidden -->
+                                    <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                    <!-- IsEditing = false -> overlay show -->
+                                    <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="False">
+                                        <Setter Property="IsVisible" Value="True" />
+                                    </DataTrigger>
+                                </Grid.Triggers>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Grid>
                     </Grid>
+
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Action Buttons -->
-            <VerticalStackLayout Spacing="10" Margin="0,10,0,0">
-                <Button Text="Edit Profile"
+            <VerticalStackLayout Spacing="15" Margin="0,10,0,0">
+
+                <Button Text="{Binding ButtonText}"
+                        Command="{Binding ToggleEditCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource White}"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HeightRequest="50"
+                        CornerRadius="25"
                         HorizontalOptions="Fill" />
+
+                <Button Text="Cancel"
+                        Command="{Binding ToggleEditCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource Error}"
+                        FontSize="14"
+                        IsVisible="False">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsEditing}" Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
             </VerticalStackLayout>
 
         </VerticalStackLayout>

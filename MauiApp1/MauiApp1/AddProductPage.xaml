@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             xmlns:controls="clr-namespace:MauiApp1.Controls"
+             xmlns:behaviors="clr-namespace:MauiApp1.Behaviors"
+             x:Class="MauiApp1.AddProductPage"
+             x:DataType="viewmodels:AddProductPageViewModel"
+             Title="Add New Product">
+    
+    <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+
+
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center">
+            <Image Source="dotnet_bot.png" HeightRequest="80" />
+            <Label Text="Input Product Information" FontSize="20" FontAttributes="Bold"/>
+        </VerticalStackLayout>
+
+        <!-- Form Fields -->
+        <ScrollView Grid.Row="1">
+            
+            <VerticalStackLayout Spacing="15" VerticalOptions="Center">
+                <!-- Product Name -->
+                <Label Text="Product Name:" FontAttributes="Bold"/>
+                <Entry Text="{Binding Name, Mode=TwoWay}" 
+                       Placeholder="Enter product name"/>
+
+                <!-- Description -->
+                <Label Text="Description:" FontAttributes="Bold"/>
+                <Editor Text="{Binding Description, Mode=TwoWay}" 
+                        Placeholder="Enter product description"
+                        HeightRequest="100"
+                        AutoSize="TextChanges"/>
+
+                <!-- Price -->
+                <Label Text="Price ($):" FontAttributes="Bold"/>
+                <Entry Text="{Binding PriceText, Mode=TwoWay}" 
+                       Placeholder="Enter price (e.g., 19.99)"
+                       Keyboard="Numeric"/>
+
+                <!-- Stock Quantity -->
+                <Label Text="Stock Quantity:" FontAttributes="Bold"/>
+                <Entry Text="{Binding StockText, Mode=TwoWay}" 
+                       Placeholder="Enter stock quantity"
+                       Keyboard="Numeric"/>
+            </VerticalStackLayout>
+            
+        </ScrollView>
+
+        <!-- Save Button -->
+        <Button Grid.Row="2" 
+                Text="Save Product" 
+                Command="{Binding SaveProductCommand}"
+                HeightRequest="50" 
+                CornerRadius="25" 
+                Margin="0,0,0,10"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource White}">
+            
+            <Button.Triggers>
+                
+                <!-- Disable button when form is invalid -->
+                <DataTrigger TargetType="Button" 
+                             Binding="{Binding IsFormValid}" 
+                             Value="False">
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
+                    <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                </DataTrigger>
+                
+            </Button.Triggers>
+        </Button>
+
+        <!-- Toast Notification -->
+        <controls:ToastNotification x:Name="ToastNotificationControl" 
+                                     Grid.RowSpan="3" 
+                                     VerticalOptions="Start" />
+    </Grid>
+</ContentPage>

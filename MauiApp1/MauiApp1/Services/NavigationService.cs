@@ -1,27 +1,27 @@
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MauiApp1.Messages;
 using MauiApp1.ViewModels;
 
 namespace MauiApp1.Services;
 
 public class NavigationService : INavigationService
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    private readonly Dictionary<Type, Type> _viewModelPageMapping = new()
+    // Map ViewModel types to route names
+    private readonly Dictionary<Type, string> _viewModelRouteMapping = new()
     {
-        { typeof(MainPageViewModel), typeof(MainPage) },
-        { typeof(DemoPageViewModel), typeof(DemoPage) },
-        { typeof(DashboardBarViewModel), typeof(DashboardBar) },
-        { typeof(AddUserPageViewModel), typeof(AddUserPage) },
-        { typeof(LoginPageViewModel), typeof(LoginPage) },
-        { typeof(UserManagePageViewModel), typeof(UserManagePage) },
-        { typeof(ProductManagePageViewModel), typeof(ProductManagePage) },
-        { typeof(ProfilePageViewModel), typeof(ProfilePage) },
-        { typeof(ProfileImagePageViewModel), typeof(ProfileImagePage) },
+        { typeof(MainPageViewModel), "//main" },
+        { typeof(UserManagePageViewModel), nameof(UserManagePage) },
+        { typeof(ProductManagePageViewModel), nameof(ProductManagePage) },
+        { typeof(ProfilePageViewModel), "//profile" },
+        { typeof(ProfileImagePageViewModel), nameof(ProfileImagePage) },
+        { typeof(AddUserPageViewModel), nameof(AddUserPage) },
+        { typeof(DemoPageViewModel), nameof(DemoPage) },
+        { typeof(LoginPageViewModel), nameof(LoginPage) },
+        { typeof(AddProductPageViewModel), nameof(AddProductPage) },
     };
 
-    public NavigationService(IServiceProvider serviceProvider)
+    public NavigationService()
     {
-        _serviceProvider = serviceProvider;
     }
 
     public async Task NavigateToAsync<TViewModel>() where TViewModel : class
@@ -29,46 +29,26 @@ public class NavigationService : INavigationService
         await NavigateToAsync<TViewModel>(null);
     }
 
-    public async Task NavigateToAsync<TViewModel>(IDictionary<string, object> parameters) where TViewModel : class
+    public async Task NavigateToAsync<TViewModel>(IDictionary<string, object>? parameters) where TViewModel : class
     {
-        var viewModelType = typeof(TViewModel);
-        
-        if (!_viewModelPageMapping.TryGetValue(viewModelType, out var pageType))
+        if (!_viewModelRouteMapping.TryGetValue(typeof(TViewModel), out var route))
         {
-            throw new InvalidOperationException($"No page found for ViewModel type {viewModelType.Name}");
+            throw new InvalidOperationException($"No route found for ViewModel type {typeof(TViewModel).Name}");
         }
 
-        // Resolve the page from DI
-        var page = _serviceProvider.GetRequiredService(pageType) as Page;
-        
-        if (page == null)
+        if (parameters != null)
         {
-            throw new InvalidOperationException($"Could not resolve page of type {pageType.Name}");
+            await Shell.Current.GoToAsync(route, parameters);
         }
-
-        // Pass parameters if ViewModel implements IQueryAttributable
-        if (parameters != null && page.BindingContext is IQueryAttributable queryAttributable)
+        else
         {
-            queryAttributable.ApplyQueryAttributes(parameters);
-        }
-
-        // Get the correct navigation (handle FlyoutPage)
-        var navigation = GetNavigation();
-        
-        if (navigation != null)
-        {
-            await navigation.PushAsync(page);
+            await Shell.Current.GoToAsync(route);
         }
     }
 
     public async Task GoBackAsync()
     {
-        var navigation = GetNavigation();
-        
-        if (navigation != null && navigation.NavigationStack.Count > 0)
-        {
-            await navigation.PopAsync();
-        }
+        await Shell.Current.GoToAsync("..");
     }
 
     public async Task NavigateToAsync(string route)
@@ -81,63 +61,50 @@ public class NavigationService : INavigationService
         await Shell.Current.GoToAsync(route, parameters);
     }
 
-    public async Task NavigateToAsyncAndClearStack<TViewModel>() where TViewModel : class
+    public async Task NavigateToAsyncAndClearStack<TViewModel>(IDictionary<string, object>? parameters = null) where TViewModel : class
     {
-        var viewModelType = typeof(TViewModel);
-        
-        if (!_viewModelPageMapping.TryGetValue(viewModelType, out var pageType))
+        // For Shell, navigating to main app is handled by App.NavigateToMainApp()
+        // This method is kept for compatibility but delegates to App
+        if (typeof(TViewModel) == typeof(MainPageViewModel))
         {
-            throw new InvalidOperationException($"No page found for ViewModel type {viewModelType.Name}");
-        }
-
-        // Resolve the page from DI
-        var page = _serviceProvider.GetRequiredService(pageType) as Page;
-        
-        if (page == null)
-        {
-            throw new InvalidOperationException($"Could not resolve page of type {pageType.Name}");
-        }
-
-        // Replace the navigation stack by setting a new NavigationPage as Detail
-        var mainPage = Application.Current?.MainPage;
-        
-        if (mainPage is FlyoutPage flyoutPage)
-        {
-            // Create a new NavigationPage with the target page as root
-            var newNavigationPage = new NavigationPage(page)
+            if (Application.Current is App app)
             {
-                BarBackgroundColor = Colors.LightBlue,
-                BarTextColor = Colors.White
-            };
-            
-            flyoutPage.Detail = newNavigationPage;
-            
-            // Close flyout if open
-            flyoutPage.IsPresented = false;
+                app.NavigateToMainApp();
+            }
+
+            // if there are parameters, navigate to MainPage with parameters
+            // check if parameters contain a key named "toast_message"
+            if (parameters != null && parameters.ContainsKey("toast_message"))
+            {
+
+                // get message from parameters
+                string message = parameters["toast_message"].ToString();
+
+                await Task.Delay(500);
+
+                // send toast message 
+                WeakReferenceMessenger.Default.Send(new ShowToastMessage(message));
+            }
+
+            return;
+        }
+
+        if (!_viewModelRouteMapping.TryGetValue(typeof(TViewModel), out var route))
+        {
+            throw new InvalidOperationException($"No route found for ViewModel type {typeof(TViewModel).Name}");
+        }
+
+        // Use absolute route with // to go to root and clear stack
+        var absoluteRoute = route.StartsWith("//") ? route : $"//{route}";
+
+        // assign parameters if any
+        if (parameters != null)
+        {
+            await Shell.Current.GoToAsync(absoluteRoute, parameters);
         }
         else
         {
-            // Fallback: just navigate normally
-            await NavigateToAsync<TViewModel>();
+            await Shell.Current.GoToAsync(absoluteRoute);
         }
-
-        await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Gets the correct INavigation instance, handling FlyoutPage
-    /// </summary>
-    private INavigation? GetNavigation()
-    {
-        var mainPage = Application.Current?.MainPage;
-
-        // If MainPage is a FlyoutPage, get the Detail page's navigation
-        if (mainPage is FlyoutPage flyoutPage)
-        {
-            return flyoutPage.Detail?.Navigation;
-        }
-
-        // Otherwise, use MainPage's navigation directly
-        return mainPage?.Navigation;
     }
 }

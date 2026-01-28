@@ -7,14 +7,14 @@
              x:Class="MauiApp1.ProductManagePage"
              Title="Product Manage Page">
         <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" />
+        <ToolbarItem Text="Add Product" Command="{Binding GoToAddProductPageCommand}" />
         </ContentPage.ToolbarItems>
 
     <!-- ROOT GRID -->
     <Grid>
 
         <!-- MAIN CONTENT GRID -->
-        <Grid RowDefinitions="Auto, *">
+        <Grid RowDefinitions="Auto, Auto, *">
 
             <!-- Title -->
             <Label Grid.Row="0" 
@@ -22,13 +22,28 @@
                    FontSize="24" 
                    FontAttributes="Bold" 
                    Padding="20,10" 
-                   TextColor="#512BD4"/>
+                   TextColor="{StaticResource Primary}"/>
 
-            <RefreshView Grid.Row="1"
+            <!-- SEARCH BAR -->
+            <SearchBar Grid.Row="1"
+                       Placeholder="Search products..."
+                       PlaceholderColor="{StaticResource Gray400}"
+                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
+                       SearchCommand="{Binding SearchProductCommand}"
+                       SearchCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                       Margin="20,0,20,10"
+                       HeightRequest="45">
+                <SearchBar.Shadow>
+                    <Shadow Brush="Gray" Offset="0,2" Radius="4" Opacity="0.2" />
+                </SearchBar.Shadow>
+            </SearchBar>
+
+            <RefreshView Grid.Row="2"
                          IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding LoadProductCommand}">
-                         
-                 <!-- PRODUCT LIST -->
+
+                <!-- PRODUCT LIST -->
                 <CollectionView ItemsSource="{Binding Products}"
                                     SelectionMode="Single"
                                     SelectionChangedCommand="{Binding SelectedProductCommand}"
@@ -40,75 +55,211 @@
                                    HeightRequest="100" />
                             <Label Text="No products available." 
                                    FontSize="18" 
-                                   TextColor="#999999"/>
+                                   TextColor="{StaticResource Gray400}"/>
                         </VerticalStackLayout>
                     </CollectionView.EmptyView>
 
+                    <!-- PRODUCT ITEM -->
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dtos:ProductDto">
-                            <Frame Margin="10"
+                            
+                            <!-- SWIPEVIEW -->
+                            <SwipeView>
+                                <!-- RIGHTITEMS -->
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItemView>
+                                            <Grid WidthRequest="100" Padding="10">
+
+                                                <!-- DELETE BUTTON -->
+                                                <Button Text="Delete" 
+                                                        BackgroundColor="{StaticResource Error}" 
+                                                        TextColor="{StaticResource White}"  
+                                                        FontSize="14"
+                                                        FontAttributes="Bold"
+                                                        WidthRequest="80"
+                                                        HeightRequest="40"
+                                                        CornerRadius="8"
+                                                        HorizontalOptions="Center"
+                                                        VerticalOptions="Center"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductManagePageViewModel}}, Path=DeleteProductCommand}"
+                                                        CommandParameter="{Binding .}"/>
+
+                                            </Grid>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <!-- ITEM MAIN CONTENT -->
+                                    <Border Margin="10"
                                     Padding="10"
-                                    BorderColor="#E0E0E0"
-                                    CornerRadius="5"
-                                    HasShadow="True">
+                                    Stroke="{StaticResource Gray100}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 5">
+                                        
+                                    <Border.Shadow>
+                                        <Shadow Brush="Gray" Offset="2,2" Radius="4" Opacity="0.3" />
+                                    </Border.Shadow>
 
-                                <Grid ColumnDefinitions="Auto, *">
+                                    <Grid ColumnDefinitions="Auto, *">
 
-                                    <Image Grid.Column="0"
+                                        <Image Grid.Column="0"
                                            Source="dotnet_bot.png"
                                            HeightRequest="50"
                                            WidthRequest="50"
                                            Margin="0,0,10,0"/>
 
-                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                    <Label Text="{Binding Name}" 
+                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}" 
                                                FontSize="18" 
                                                FontAttributes="Bold" 
-                                               TextColor="#333333"/>
-                                    <Label Text="{Binding Description}" 
+                                               TextColor="{StaticResource Gray900}"/>
+                                            <Label Text="{Binding Description}" 
                                                FontSize="14" 
-                                               TextColor="#666666"/>
-                                    <Label Text="{Binding Price, StringFormat='Price: {0:C}'}" 
+                                               TextColor="{StaticResource Gray500}"/>
+                                            <Label Text="{Binding Price, StringFormat='Price: {0:C}'}" 
                                                FontSize="16" 
-                                               TextColor="#512BD4"/>
-                                </VerticalStackLayout>
+                                               TextColor="{StaticResource Gray500}"/>
+                                        </VerticalStackLayout>
 
 
-                                    <Button Grid.Column="2" 
+                                        <Button Grid.Column="2" 
                                             Text="View Detail" 
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductManagePageViewModel}}, Path=ShowProductDetailsCommand}"
                                             CommandParameter="{Binding .}"
-                                            BackgroundColor="#512BD4" 
-                                            TextColor="White" 
+                                            BackgroundColor="{StaticResource Primary}" 
+                                            TextColor="{StaticResource White}" 
                                             FontSize="14" 
                                             HeightRequest="30" 
                                             WidthRequest="85"
                                             Padding="0"
-                                            Margin="40,0,0,0"
+                                            Margin="200,0,0,0"
                                             VerticalOptions="Center"/>
 
-                                    <Button Grid.Column="2" 
-                                            Text="Delete" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductManagePageViewModel}}, Path=ShowProductDetailsCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="#D32F2F" 
-                                            TextColor="White" 
-                                            FontSize="14" 
-                                            HeightRequest="30" 
-                                            WidthRequest="85"
-                                            Padding="0"
-                                            Margin="220,0,0,0"
-                                            VerticalOptions="Center"/>      
-
-                                </Grid>
-                                
-                            </Frame>
+                                    </Grid>
+                                </Border>
+                            </SwipeView>
+                            
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
-
         </Grid>
-                
+
+        <!-- POPUP OVERLAY -->
+        <Grid IsVisible="{Binding IsPopupOpen}"
+              BackgroundColor="{StaticResource PopupOverlayColor}">
+            <Border HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Padding="20"
+                    WidthRequest="300"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 10"
+                    Stroke="{StaticResource Primary}"
+                    StrokeThickness="2">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.5" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Product Details"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"/>
+
+                    <Image Source="dotnet_bot.png"
+                           HeightRequest="100"
+                           WidthRequest="100"
+                           HorizontalOptions="Center"/>
+
+                    <VerticalStackLayout Spacing="12">
+
+                        <!-- Name -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <FormattedString.Spans>
+                                        <Span Text="Name: " FontAttributes="Bold" />
+                                        <Span Text="{Binding SelectedProduct.Name}" />
+                                    </FormattedString.Spans>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <!-- Description -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Description: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.Description}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <!-- Price -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Price: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.Price, StringFormat='{0:C}'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <!-- StockQuantity -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Stock Quantity: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.StockQuantity}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <!-- CreatedAt -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Created At: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.CreatedAt, StringFormat='{0:MM/dd/yyyy}'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- UpdatedAt -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Updated At: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.UpdatedAt, StringFormat='{0:MM/dd/yyyy}'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        
+                        <!-- Status -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Status: " FontAttributes="Bold" />
+                                    <Span Text="{Binding SelectedProduct.Status}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                    </VerticalStackLayout>
+
+                    <Button Text="Close"
+                            Command="{Binding ClosePopupCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="{StaticResource White}"
+                            FontSize="16"
+                            HeightRequest="40"
+                            HorizontalOptions="Center"
+                            WidthRequest="100"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

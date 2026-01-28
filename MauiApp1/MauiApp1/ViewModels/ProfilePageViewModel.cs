@@ -17,6 +17,18 @@ namespace MauiApp1.ViewModels
         [ObservableProperty]
         ProfileDto selectedProfile;
 
+        // Edit mode state
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotEditing))]
+        [NotifyPropertyChangedFor(nameof(ButtonText))]
+        private bool isEditing = false;
+
+        // Read-only mode (inverse of IsEditing)
+        public bool IsNotEditing => !IsEditing;
+
+        // Button text based on edit state
+        public string ButtonText => IsEditing ? "Save Changes" : "Edit Profile";
+
         public ObservableCollection<ProfileDto> Profiles { get; } = new();
 
         public ProfilePageViewModel(IDialogService dialogService, INavigationService navigationService)
@@ -62,6 +74,71 @@ namespace MauiApp1.ViewModels
                 };
 
                 await _navigationService.NavigateToAsync<ProfileImagePageViewModel>(parameters);
+            }
+        }
+
+        [RelayCommand]
+        async Task ChangeAvatar()
+        {
+            try
+            {
+                if (MediaPicker.Default.IsCaptureSupported)
+                {
+                    FileResult photo = await MediaPicker.Default.PickPhotoAsync();
+
+                    if (photo != null)
+                    {
+                        // Save the file to a local path or simply use the FullPath
+                        // For a real app, you might want to copy it to AppDataDirectory
+                        var newFile = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+                        using var stream = await photo.OpenReadAsync();
+                        using var newStream = File.OpenWrite(newFile);
+                        await stream.CopyToAsync(newStream);
+
+                        SelectedProfile.AvatarUrl = newFile;
+                        // Force property change notification if needed, usually ObservableProperty handles it 
+                        // but since it's a property of a property, we might need to refresh or ensure ProfileDto implements INotifyPropertyChanged
+                        // For now assuming simple binding update works or we might need to re-assign SelectedProfile mechanism.
+                        // Actually SelectedProfile is ObservableProperty, but its fields might not raise notification. 
+                        // To be safe, let's trigger a refresh or re-assign.
+                        OnPropertyChanged(nameof(SelectedProfile));
+                    }
+                }
+                else
+                {
+                    await _dialogService.ShowAlertAsync("Error", "Picking photos is not supported on this device.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await _dialogService.ShowAlertAsync("Error", $"Unable to pick photo: {ex.Message}", "OK");
+            }
+        }
+
+        [RelayCommand]
+        async Task ToggleEdit()
+        {
+            if (IsEditing)
+            {
+                await _dialogService.ShowAlertAsync("Success", "Profile updated!", "OK");
+
+                // Exit edit mode
+                IsEditing = false;
+            }
+            else
+            {
+                // Enter edit mode
+                IsEditing = true;
+            }
+        }
+
+        // double click to enable edit mode
+        [RelayCommand]
+        void EnableEditMode()
+        {
+            if (!IsEditing)
+            {
+                IsEditing = true;
             }
         }
 

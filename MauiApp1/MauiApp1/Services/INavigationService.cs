@@ -33,5 +33,5 @@ public interface INavigationService
     /// <summary>
     /// Navigate to a page and clear the navigation stack (no back button)
     /// </summary>
-    Task NavigateToAsyncAndClearStack<TViewModel>() where TViewModel : class;
+    Task NavigateToAsyncAndClearStack<TViewModel>(IDictionary<string, object>? parameters = null) where TViewModel : class;
 }

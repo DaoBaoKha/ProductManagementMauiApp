@@ -1,17 +1,25 @@
-using System.Linq;
-using Microsoft.Maui.Controls;
+using System.Text.RegularExpressions;
 
 namespace MauiApp1.Behaviors
 {
-    public class NumericValidationBehavior : Behavior<Entry>
+    /// <summary>
+    /// Behavior to validate email format in Entry controls
+    /// Changes text color to red if email is invalid
+    /// </summary>
+    public class EmailValidationBehavior : Behavior<Entry>
     {
+        // Email regex pattern - basic validation
+        private static readonly Regex EmailRegex = new Regex(
+            @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         // BindableProperty với TwoWay mode
         public static readonly BindableProperty IsValidProperty =
             BindableProperty.Create(
                 nameof(IsValid),
                 typeof(bool),
-                typeof(NumericValidationBehavior),
-                true,
+                typeof(EmailValidationBehavior),
+                false,
                 BindingMode.TwoWay); // ⚡ Explicitly set TwoWay
 
         public bool IsValid
@@ -35,7 +43,7 @@ namespace MauiApp1.Behaviors
             base.OnDetachingFrom(entry);
         }
 
-        void OnEntryTextChanged(object? sender, TextChangedEventArgs args)
+        private void OnEntryTextChanged(object? sender, TextChangedEventArgs e)
         {
             if (sender is Entry entry)
             {
@@ -46,8 +54,8 @@ namespace MauiApp1.Behaviors
         private void ValidateEntry(Entry entry)
         {
             var text = entry.Text;
-            
-            // Empty text is invalid
+
+            // If empty, invalid
             if (string.IsNullOrWhiteSpace(text))
             {
                 IsValid = false;
@@ -55,13 +63,14 @@ namespace MauiApp1.Behaviors
                 return;
             }
 
-            bool hasNumber = text.Any(char.IsDigit);
+            // Validate email format
+            bool isValid = EmailRegex.IsMatch(text);
             
             // Update IsValid property
-            IsValid = !hasNumber;
-            
-            // Update text color
-            entry.TextColor = hasNumber ? Colors.Red : Colors.Black;
+            IsValid = isValid;
+
+            // Set color based on validation
+            entry.TextColor = isValid ? Colors.Black : Colors.Red;
         }
     }
 }

@@ -3,10 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
              xmlns:behaviors="clr-namespace:MauiApp1.Behaviors"
+             xmlns:controls="clr-namespace:MauiApp1.Controls"
              x:Class="MauiApp1.AddUserPage"
              x:DataType="viewmodels:AddUserPageViewModel"
              Title="Add New User">
     <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+        
+
+        
         <VerticalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center">
             <Image Source="dotnet_bot.png" HeightRequest="80" />
             <Label Text="Input User Information" FontSize="20" FontAttributes="Bold"/>
@@ -16,16 +20,36 @@
             <Label Text="Name:" />
             <Entry Text="{Binding Name, Mode=TwoWay}" Placeholder="Input Name">
                 <Entry.Behaviors>
+                    <!-- Behavior only for visual feedback (red text) -->
                     <behaviors:NumericValidationBehavior />
                 </Entry.Behaviors>
             </Entry>
 
             <Label Text="Email:" />
-            <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Input Email" Keyboard="Email" />
+            <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Input Email" Keyboard="Email">
+                <Entry.Behaviors>
+                    <!-- Behavior only for visual feedback (red text) -->
+                    <behaviors:EmailValidationBehavior />
+                </Entry.Behaviors>
+            </Entry>
         </VerticalStackLayout>
 
         <Button Grid.Row="2" Text="Save" 
                 Command="{Binding SaveUserCommand}"
-                HeightRequest="50" CornerRadius="25" Margin="0,0,0,10"/>
+                HeightRequest="50" CornerRadius="25" Margin="0,0,0,10">
+            <Button.Triggers>
+                <!-- Disable button and change to gray when form is invalid -->
+                <DataTrigger TargetType="Button" 
+                             Binding="{Binding IsFormValid}" 
+                             
+                             Value="False">
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
+                    <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <controls:ToastNotification x:Name="ToastNotificationControl" Grid.RowSpan="3" VerticalOptions="Start" />
     </Grid>
 </ContentPage>

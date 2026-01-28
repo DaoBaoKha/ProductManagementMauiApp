@@ -10,6 +10,7 @@ using System.Reflection;
 using MauiApp1.AppLogic.Services.Interfaces;
 using MauiApp1.AppLogic.Mappings;
 using MauiApp1.AppLogic.Services.Implementations;
+using DevExpress.Maui;
 
 namespace MauiApp1
 {
@@ -20,6 +21,8 @@ namespace MauiApp1
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseDevExpress(useLocalization: false)
+                .UseDevExpressControls()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -56,6 +59,9 @@ namespace MauiApp1
             // Presentation Layer - UI Services
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IDialogService, DialogService>();
+            
+            // Shell
+            builder.Services.AddSingleton<AppShell>();
 
             // Presentation Layer - ViewModels
             builder.Services.AddTransient<MainPageViewModel>();
@@ -67,6 +73,7 @@ namespace MauiApp1
             builder.Services.AddTransient<ProductManagePageViewModel>();
             builder.Services.AddTransient<ProfilePageViewModel>();
             builder.Services.AddTransient<ProfileImagePageViewModel>();
+            builder.Services.AddTransient<AddProductPageViewModel>();
 
             // Presentation Layer - Pages
             builder.Services.AddTransient<MainPage>();
@@ -78,6 +85,7 @@ namespace MauiApp1
             builder.Services.AddTransient<ProductManagePage>();
             builder.Services.AddTransient<ProfilePage>();
             builder.Services.AddTransient<ProfileImagePage>();
+            builder.Services.AddTransient<AddProductPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();

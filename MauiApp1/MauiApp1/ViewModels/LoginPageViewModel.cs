@@ -8,6 +8,7 @@ namespace MauiApp1.ViewModels
     {
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
+        private LoginPage? _loginPage;
 
         public LoginPageViewModel(INavigationService navigationService, IDialogService dialogService)
         {
@@ -16,20 +17,30 @@ namespace MauiApp1.ViewModels
             _dialogService = dialogService;
         }
 
-        [ObservableProperty]
-        string username;
+        // Method to set page reference (called from LoginPage constructor)
+        public void SetPage(LoginPage page)
+        {
+            _loginPage = page;
+        }
 
         [ObservableProperty]
-        string password;
+        private string username = string.Empty;
+
+        [ObservableProperty]
+        private string password = string.Empty;
 
         [RelayCommand]
         async Task Login()
         {
             if(username == "admin" && password == "12345")
             {
-                await _dialogService.ShowAlertAsync("Login", "Login successful!");
-                // Clear navigation stack to prevent going back to login page
-                await _navigationService.NavigateToAsyncAndClearStack<MainPageViewModel>();
+                // Pass login=true parameter to trigger success banner on MainPage
+                var parameters = new Dictionary<string, object>
+                {
+                    { "toast_message", "Login Successfully!" }
+                };
+                
+                await _navigationService.NavigateToAsyncAndClearStack<MainPageViewModel>(parameters);
             }
             else
             {

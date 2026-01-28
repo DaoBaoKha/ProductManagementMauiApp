@@ -47,8 +47,8 @@
             <Button Text="Login"
                     Command="{Binding LoginCommand}"
                     Margin="0,450,0,0"
-                    BackgroundColor="#512BD4"
-                    TextColor="White"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource White}"
                     FontSize="18"
                     HeightRequest="50"
                     CornerRadius="25" />

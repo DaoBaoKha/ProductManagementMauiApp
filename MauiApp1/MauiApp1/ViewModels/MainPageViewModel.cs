@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.AppLogic.DTOs;
 using MauiApp1.Services;
@@ -15,10 +15,14 @@ public partial class MainPageViewModel : BaseViewModel
 
     public ObservableCollection<UserDto> Users { get; } = new();
 
+    public ObservableCollection<BannerDto> Banners { get; } = new();
+
     public MainPageViewModel(INavigationService navigationService)
     {
         Title = "Main Page";
         _navigationService = navigationService;
+
+        LoadBanners();
     }
 
     [RelayCommand]
@@ -31,5 +35,38 @@ public partial class MainPageViewModel : BaseViewModel
     async Task GoToProductManagePage()
     {
         await _navigationService.NavigateToAsync<ProductManagePageViewModel>();
+    }
+
+    private void LoadBanners()
+    {
+        Banners.Clear();
+
+        Banners.Add(new BannerDto
+        {
+            Title = "Welcome Bao Kha",
+            ImageUrl = "dotnet_bot.png",
+            Message = "Welcome"
+        });
+
+        Banners.Add(new BannerDto
+        {
+            Title = "New Feature",
+            ImageUrl = "dotnet_bot.png",
+            Message = "Feature"
+        });
+
+        Banners.Add(new BannerDto
+        {
+            Title = "Upcoming Event",
+            ImageUrl = "dotnet_bot.png",
+            Message = "Event"
+        });
+
+        Banners.Add(new BannerDto
+        {
+            Title = "About Us",
+            ImageUrl = "dotnet_bot.png",
+            Message = "Information"
+        });
     }
 }
