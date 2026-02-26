@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauiApp1.AppLogic.DTOs;
+using MauiApp1.AppLogic.Enums;
 using MauiApp1.Services;
 using System.Collections.ObjectModel;
 
@@ -19,6 +20,9 @@ namespace MauiApp1.ViewModels
         [ObservableProperty]
         UserDto selectedUser;
 
+        [ObservableProperty]
+        string searchText;
+        
         public ObservableCollection<UserDto> Users { get; } = new();
         
         // Store all users for search filtering
@@ -33,42 +37,86 @@ namespace MauiApp1.ViewModels
             Task.Run(async () => await LoadUser());
         }
 
+        // Auto-search when SearchText changes
+        partial void OnSearchTextChanged(string value)
+        {
+            SearchUser(value);
+        }
+
         [RelayCommand]
         async Task LoadUser()
         {
             IsRefreshing = true;
-            await Task.Delay(2000); // Simulate a data load
+            await Task.Delay(2000);
 
-            AllUsers.Clear();
-            Users.Clear();
-
-            var user1 = new UserDto
+            var newUsers = new List<UserDto>
             {
-                Id = "1",
-                Username = "daobaokha",
-                Email = "daobaokha@gmail.com",
-                FullName = "Dao Bao Kha",
-                DateOfBirth = new DateTime(2004, 09, 25),
-                AvatarUrl = "https://example.com/avatar1.png"
+                new UserDto
+                {
+                    Id = "1",
+                    Username = "daobaokha",
+                    Email = "daobaokha@gmail.com",
+                    FullName = "Dao Bao Kha",
+                    DateOfBirth = new DateTime(2004, 09, 25),
+                    Gender = Gender.Male,
+                    AvatarUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194801.jpg"
+                },
+                new UserDto
+                {
+                    Id = "2",
+                    Username = "user2",
+                    Email = "user2@gmail.com",
+                    FullName = "Nguyen Van A",
+                    DateOfBirth = new DateTime(2015, 01, 01),
+                    Gender = Gender.Male,
+                    AvatarUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194802.jpg"
+                },
+                new UserDto
+                {
+                     Id = "3",
+                     Username = "baokha",
+                     Email = "baokha@gmail.com",
+                     FullName = "Bao Kha",
+
+                     DateOfBirth = new DateTime(2004, 09, 24),
+                     Gender = Gender.Female,
+                     AvatarUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194802.jpg"
+                },
+                new UserDto
+                {
+                     Id = "4",
+                     Username = "baokha",
+                     Email = "baokha@gmail.com",
+                     FullName = "Bao Kha",
+                     DateOfBirth = new DateTime(2005, 09, 24),
+                     Gender = Gender.Other,
+                     AvatarUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194802.jpg"
+                },
+                new UserDto
+                {
+                     Id = "5",
+                     Username = "baokha",
+                     Email = "baokha@gmail.com",
+                     FullName = "Bao Kha",
+                     DateOfBirth = new DateTime(1994, 09, 24),
+                     Gender = Gender.PreferNotToSay,
+                     AvatarUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194802.jpg"
+                },
             };
 
-            var user2 = new UserDto
+            // return to main thread to update UI
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                Id = "2",
-                Username = "baokha",
-                Email = "baokha@gmail.com",
-                FullName = "Bao Kha",
-                DateOfBirth = new DateTime(2004, 09, 24),
-                AvatarUrl = "https://example.com/avatar1.png"
-            };
+                AllUsers = new List<UserDto>(newUsers);
 
-            AllUsers.Add(user1);
-            AllUsers.Add(user2);
-            
-            Users.Add(user1);
-            Users.Add(user2);
+                Users.Clear();
+                foreach (var u in newUsers)
+                {
+                    Users.Add(u);
+                }
 
-            IsRefreshing = false;
+                IsRefreshing = false;
+            });
         }
 
         [RelayCommand]
@@ -133,6 +181,35 @@ namespace MauiApp1.ViewModels
         {
             IsPopupOpen = false;
             SelectedUser = null;
+        }
+
+        // Edit Mode Logic
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotEditing))]
+        bool isEditing;
+
+        public bool IsNotEditing => !IsEditing;
+
+        [RelayCommand]
+        void EnableEditMode()
+        {
+            if (!IsEditing) IsEditing = true;
+        }
+
+        [RelayCommand]
+        async Task SaveUser()
+        {
+            // Simulate Save
+            IsEditing = false;
+            // Call API to update SelectedUser
+            await Application.Current.MainPage.DisplayAlert("Success", "User Updated", "OK");
+        }
+
+        [RelayCommand]
+        void CancelEdit()
+        {
+            IsEditing = false;
+            // Revert logic would go here
         }
     }
 }

@@ -37,6 +37,12 @@ public partial class MainPageViewModel : BaseViewModel
         await _navigationService.NavigateToAsync<ProductManagePageViewModel>();
     }
 
+    [RelayCommand]
+    async Task GoToUserAnalyticsPage()
+    {
+        await _navigationService.NavigateToAsync<UserAnalyticsPageViewModel>();
+    }
+
     private void LoadBanners()
     {
         Banners.Clear();

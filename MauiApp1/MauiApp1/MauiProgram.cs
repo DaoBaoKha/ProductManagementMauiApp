@@ -22,7 +22,11 @@ namespace MauiApp1
             builder
                 .UseMauiApp<App>()
                 .UseDevExpress(useLocalization: false)
+                .UseDevExpressCollectionView()
+                .UseDevExpressDataGrid()
+                .UseDevExpressEditors()
                 .UseDevExpressControls()
+                .UseDevExpressCharts()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -69,11 +73,14 @@ namespace MauiApp1
             builder.Services.AddTransient<DashboardBarViewModel>();
             builder.Services.AddTransient<AddUserPageViewModel>();
             builder.Services.AddTransient<LoginPageViewModel>();
-            builder.Services.AddTransient<UserManagePageViewModel>();
+            builder.Services.AddTransient<LoginPageViewModel>();
+            builder.Services.AddSingleton<UserManagePageViewModel>();
+            builder.Services.AddTransient<ProductManagePageViewModel>();
             builder.Services.AddTransient<ProductManagePageViewModel>();
             builder.Services.AddTransient<ProfilePageViewModel>();
             builder.Services.AddTransient<ProfileImagePageViewModel>();
             builder.Services.AddTransient<AddProductPageViewModel>();
+            builder.Services.AddTransient<UserAnalyticsPageViewModel>();
 
             // Presentation Layer - Pages
             builder.Services.AddTransient<MainPage>();
@@ -86,6 +93,7 @@ namespace MauiApp1
             builder.Services.AddTransient<ProfilePage>();
             builder.Services.AddTransient<ProfileImagePage>();
             builder.Services.AddTransient<AddProductPage>();
+            builder.Services.AddTransient<UserAnalyticsPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();

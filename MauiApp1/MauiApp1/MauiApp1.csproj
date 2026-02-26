@@ -67,7 +67,10 @@
 		<PackageReference Include="AutoMapper" Version="16.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="DevExpress.Maui.Charts" Version="25.1.8" />
 		<PackageReference Include="DevExpress.Maui.Controls" Version="25.1.8" />
+		<PackageReference Include="DevExpress.Maui.DataGrid" Version="25.1.8" />
+		<PackageReference Include="DevExpress.Maui.Editors" Version="25.1.8" />
 		<PackageReference Include="Google.Protobuf" Version="3.33.4" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.76.0">

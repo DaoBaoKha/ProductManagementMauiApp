@@ -4,6 +4,9 @@
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
              xmlns:converters="clr-namespace:MauiApp1.Converters"
              xmlns:sys="clr-namespace:System;assembly=netstandard"
+             xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+             xmlns:dxc="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
+             xmlns:dxcore="clr-namespace:DevExpress.Maui.Core;assembly=DevExpress.Maui.Core"
              x:DataType="viewmodels:ProfilePageViewModel"
              x:Class="MauiApp1.ProfilePage"
              Title="Profile Page"
@@ -114,49 +117,74 @@
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
                         <Label Text="Full Name" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Fullname}">
-                            <Entry.GestureRecognizers>
+                        
+                        <!-- DevExpress TextEdit for Full Name -->
+                        <dxe:TextEdit Grid.Row="1" 
+                                      Text="{Binding SelectedProfile.Fullname}"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      ClearIconVisibility="Auto">
+                            <dxe:TextEdit.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
-                            </Entry.GestureRecognizers>
-                        </Entry>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
                         <Label Text="Email" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Email}" Keyboard="Email">
-                            <Entry.GestureRecognizers>
+                        
+                        <!-- DevExpress TextEdit for Email -->
+                        <dxe:TextEdit Grid.Row="1" 
+                                      Text="{Binding SelectedProfile.Email}" 
+                                      Keyboard="Email"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      ClearIconVisibility="Auto">
+                            <dxe:TextEdit.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
-                            </Entry.GestureRecognizers>
-                        </Entry>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
                         <Label Text="Phone Number" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.PhoneNumber}" Keyboard="Telephone">
-                            <Entry.GestureRecognizers>
+                        
+                        <!-- DevExpress TextEdit for Phone Number -->
+                        <dxe:TextEdit Grid.Row="1" 
+                                      Text="{Binding SelectedProfile.PhoneNumber}" 
+                                      Keyboard="Telephone"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      ClearIconVisibility="Auto">
+                            <dxe:TextEdit.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
-                            </Entry.GestureRecognizers>
-                        </Entry>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
                         <Label Text="Address" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
-                        <Entry Grid.Row="1" Text="{Binding SelectedProfile.Address}">
-                            <Entry.GestureRecognizers>
+                        
+                        <!-- DevExpress TextEdit for Address -->
+                        <dxe:TextEdit Grid.Row="1" 
+                                      Text="{Binding SelectedProfile.Address}"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      ClearIconVisibility="Auto">
+                            <dxe:TextEdit.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2" />
-                            </Entry.GestureRecognizers>
-                        </Entry>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
                     </Grid>
 
                     <Grid RowDefinitions="Auto, Auto" RowSpacing="5">
                         <Label Text="Date Of Birth" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
                         
-                        <!-- Grid container for DatePicker and overlay -->
+                        <!-- Grid container for DateEdit and overlay -->
                         <Grid Grid.Row="1">
-                            <!-- DatePicker -->
-                            <DatePicker Date="{Binding SelectedProfile.DateOfBirth, Converter={StaticResource DateOnlyToDateTimeConverter}}"
-                                        MinimumDate="1900-01-01"
-                                        MaximumDate="{x:Static sys:DateTime.Now}"/>
+                            
+                            <!-- DevExpress DateEdit -->
+                            <dxe:DateEdit Date="{Binding SelectedProfile.DateOfBirth, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                                         MinDate="1900-01-01"
+                                         MaxDate="{x:Static sys:DateTime.Now}"
+                                         IsReadOnly="{Binding IsNotEditing}"
+                                         DisplayFormat="dd/MM/yyyy"/>
                             
                             <!-- Overlay transparent -->
                             <Grid BackgroundColor="Transparent">
@@ -182,28 +210,30 @@
 
             <VerticalStackLayout Spacing="15" Margin="0,10,0,0">
 
-                <Button Text="{Binding ButtonText}"
-                        Command="{Binding ToggleEditCommand}"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource White}"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        HeightRequest="50"
-                        CornerRadius="25"
-                        HorizontalOptions="Fill" />
+                <!-- DevExpress Button for Edit/Save -->
+                <dxcore:DXButton Content="{Binding ButtonText}"
+                                 Command="{Binding ToggleEditCommand}"
+                                 BackgroundColor="{StaticResource Primary}"
+                                 TextColor="{StaticResource White}"
+                                 FontAttributes="Bold"
+                                 FontSize="16"
+                                 HeightRequest="50"
+                                 CornerRadius="25"
+                                 HorizontalOptions="Fill" />
 
-                <Button Text="Cancel"
-                        Command="{Binding ToggleEditCommand}"
-                        BackgroundColor="Transparent"
-                        TextColor="{StaticResource Error}"
-                        FontSize="14"
-                        IsVisible="False">
-                    <Button.Triggers>
-                        <DataTrigger TargetType="Button" Binding="{Binding IsEditing}" Value="True">
+                <!-- DevExpress Button for Cancel -->
+                <dxcore:DXButton Content="Cancel"
+                                 Command="{Binding ToggleEditCommand}"
+                                 BackgroundColor="Transparent"
+                                 TextColor="{StaticResource Error}"
+                                 FontSize="14"
+                                 IsVisible="False">
+                    <dxcore:DXButton.Triggers>
+                        <DataTrigger TargetType="dxcore:DXButton" Binding="{Binding IsEditing}" Value="True">
                             <Setter Property="IsVisible" Value="True" />
                         </DataTrigger>
-                    </Button.Triggers>
-                </Button>
+                    </dxcore:DXButton.Triggers>
+                </dxcore:DXButton>
 
             </VerticalStackLayout>
 

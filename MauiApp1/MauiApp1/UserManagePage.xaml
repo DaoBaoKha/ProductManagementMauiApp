@@ -2,245 +2,231 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dtos="clr-namespace:MauiApp1.AppLogic.DTOs"
+             xmlns:enums="clr-namespace:MauiApp1.AppLogic.Enums"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             
+             xmlns:dxg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+             xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+             xmlns:dxco="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
+             xmlns:dxcore="clr-namespace:DevExpress.Maui.Core;assembly=DevExpress.Maui.Core"
+             
              x:Class="MauiApp1.UserManagePage"
              x:DataType="viewmodels:UserManagePageViewModel"
-             Title="User Manage Page">
+             Title="User Management"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=Black}">
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add User" Command="{Binding GoToAddUserPageCommand}" />
     </ContentPage.ToolbarItems>
 
-    <!-- ROOT GRID -->
     <Grid>
-        
-        <!-- MAIN CONTENT GRID -->
-        <Grid RowDefinitions="Auto, Auto, *, Auto, Auto">
-            
-            <!-- Title -->
+
+        <Grid RowDefinitions="Auto, Auto, *">
+
             <Label Grid.Row="0" 
                    Text="User Management" 
                    FontSize="24" 
                    FontAttributes="Bold" 
-                   Padding="20,10" 
+                   Padding="20,10,20,5" 
                    TextColor="{StaticResource Primary}"/>
 
-            <!-- SEARCH BAR -->
-            <SearchBar Grid.Row="1"
-                       Placeholder="Search users..."
-                       PlaceholderColor="{StaticResource Gray400}"
-                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-                       SearchCommand="{Binding SearchUserCommand}"
-                       SearchCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                       Margin="20,0,20,10"
-                       HeightRequest="45">
-                <SearchBar.Shadow>
-                    <Shadow Brush="Gray" Offset="0,2" Radius="4" Opacity="0.2" />
-                </SearchBar.Shadow>
-            </SearchBar>
+            <dxe:TextEdit Grid.Row="1"
+                          PlaceholderText="Search users..."
+                          Text="{Binding SearchText, Mode=TwoWay}"
+                          BoxMode="Filled"
+                          CornerRadius="10"
+                          Margin="20,0,20,10"
+                          StartIcon="search_icon.png" 
+                          ClearIconVisibility="Auto"/>
 
-            <RefreshView Grid.Row="2" 
+            <RefreshView Grid.Row="2"
                          IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding LoadUserCommand}">
 
-                <!-- USERS LIST -->
-                <CollectionView ItemsSource="{Binding Users}" 
-                                SelectionMode="Single"
-                                SelectionChangedCommand="{Binding SelectUserCommand}"
-                                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <dxg:DataGridView ItemsSource="{Binding Users}"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+                                  AllowSort="True"
+                                  IsColumnHeaderVisible="True"
+                                  RowHeight="70"
+                                  Tap="OnDataGridTap">
 
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Image Source="dotnet_bot.png" HeightRequest="100" />
-                            <Label Text="No data yet please insert!" TextColor="Gray"/>
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-
-                    <!-- USER ITEM -->
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="dtos:UserDto">
-                            
-                            <!-- SWIPEVIEW -->
-                            <SwipeView>
-                                <!-- RIGHTITEMS - SWIPE TO LEFT -->
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Reveal">
-                                        <SwipeItemView>
-                                            <Grid 
-                                                  WidthRequest="100"
-                                                  Padding="10">
-                                                
-                                                <!-- DELETE BUTTON -->
-                                                <Button Text="Delete" 
-                                                        BackgroundColor="{StaticResource Error}" 
-                                                        TextColor="{StaticResource White}"
-                                                        FontSize="14"
-                                                        FontAttributes="Bold"
-                                                        WidthRequest="80"
-                                                        HeightRequest="40"
-                                                        CornerRadius="8"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:UserManagePageViewModel}}, Path=DeleteUserCommand}"
-                                                        CommandParameter="{Binding .}"/>
-                                            </Grid>
-                                        </SwipeItemView>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-
-                                <!-- ITEM MAIN CONTENT -->
-                                <Border Margin="10,5" Padding="10" StrokeShape="RoundRectangle 8" Stroke="LightGray" StrokeThickness="1">
-                                    <Border.Shadow>
-                                        <Shadow Brush="Gray" Offset="2,2" Radius="4" Opacity="0.3" />
-                                    </Border.Shadow>
-                                    <Grid ColumnDefinitions="Auto, *, Auto">
-                                        
-                                        <Image Grid.Column="0" 
-                                               Source="dotnet_bot.png" 
-                                               HeightRequest="50" 
-                                               WidthRequest="50" 
-                                               Margin="0,0,10,0"/>
-
-                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                            <Label Text="{Binding FullName}" FontSize="16" FontAttributes="Bold"/>
-                                            <Label Text="{Binding Email}" FontSize="12" TextColor="Gray"/>
-                                        </VerticalStackLayout>
+                    <dxg:DataGridView.Columns>
 
 
-                                        <Button Grid.Column="2" 
-                                                Text="View Detail" 
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:UserManagePageViewModel}}, Path=ShowUserDetailsCommand}"
-                                                CommandParameter="{Binding .}"
-                                                BackgroundColor="{StaticResource Primary}" 
-                                                TextColor="{StaticResource White}" 
-                                                FontSize="14" 
-                                                HeightRequest="30" 
-                                                WidthRequest="85"
-                                                Padding="0"
-                                                Margin="10,0,0,0"
-                                                VerticalOptions="Center"/>
-                                            
-                                    </Grid>
-                                </Border>
-                            </SwipeView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+
+                        <!-- Name Column -->
+                        <dxg:TextColumn FieldName="FullName" 
+                                        Caption="Name" 
+                                        Width="150"/>
+
+                        <!-- Email Column -->
+                        <dxg:TextColumn FieldName="Email" 
+                                        Caption="Email" 
+                                        Width="*"/>
+
+
+                        <dxg:TemplateColumn Caption="Status" Width="80">
+                            <dxg:TemplateColumn.DisplayTemplate>
+                                <DataTemplate x:DataType="dtos:UserDto">
+                                    <Border BackgroundColor="#E8F5E9" 
+                                            StrokeShape="RoundRectangle 10" 
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            Padding="10,4"> 
+                                        <Label Text="Active" 
+                                   TextColor="#2E7D32" 
+                                   FontSize="11" 
+                                   FontAttributes="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </dxg:TemplateColumn.DisplayTemplate>
+                        </dxg:TemplateColumn>
+
+                    </dxg:DataGridView.Columns>
+                    
+                    <dxg:DataGridView.EndSwipeItems>
+                        <dxg:SwipeItem Caption="Delete"
+                                       BackgroundColor="{StaticResource Error}"
+                                       Command="{Binding DeleteUserCommand}"/>
+                    </dxg:DataGridView.EndSwipeItems>
+
+                </dxg:DataGridView>
             </RefreshView>
         </Grid>
 
-        <!-- POPUP OVERLAY -->
-        <!-- IsVisible binding with IsPopupOpen from ViewModel -->
-        <Grid IsVisible="{Binding IsPopupOpen}" 
-              BackgroundColor="{StaticResource PopupOverlayColor}">
-            
-            <!-- POPUP CARD -->
-            <Border WidthRequest="350" 
-                    HeightRequest="500"
-                    StrokeShape="RoundRectangle 15" 
+        <dxco:DXPopup IsOpen="{Binding IsPopupOpen}"
+                      AllowScrim="True"
+                      ScrimColor="{StaticResource PopupOverlayColor}">
+
+            <Border WidthRequest="350"
+                    StrokeShape="RoundRectangle 15"
                     BackgroundColor="White"
                     Stroke="{StaticResource Primary}"
                     StrokeThickness="2"
-                    Padding="20"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.5" />
-                </Border.Shadow>
-                
+                    Padding="20">
+
                 <VerticalStackLayout Spacing="15">
-                    
-                    <Label Text="User Details" 
-                           FontSize="22" 
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center"
-                           TextColor="{StaticResource Primary}"
-                           Margin="0,0,0,10"/>
-                    
-                    <Image Source="dotnet_bot.png" 
+                    <Label Text="User Details" FontSize="22" FontAttributes="Bold" 
+                           TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
+
+                    <Image Source="{Binding SelectedUser.AvatarUrl}" 
                            HeightRequest="100" 
-                           WidthRequest="100"
+                           WidthRequest="100" 
                            HorizontalOptions="Center"
-                           Margin="0,0,0,10"/>
-                    
-                    <!-- USER INFORMATION -->
-                    <VerticalStackLayout Spacing="12">
+                           Aspect="AspectFill">
+                        <Image.Clip>
+                            <EllipseGeometry Center="50,50" RadiusX="50" RadiusY="50"/>
+                        </Image.Clip>
+                    </Image>
+
+                    <VerticalStackLayout Spacing="10">
                         
                         <!-- Full Name -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Full Name: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.FullName}" TextColor="{StaticResource Black}"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
-                        <!-- Email -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Email: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.Email}" TextColor="{StaticResource Black}"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
-                        <!-- Username -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Username: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.Username}" TextColor="{StaticResource Black}"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
-                        <!-- Date of Birth -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Date of Birth: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.DateOfBirth, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource Black}"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
-                        <!-- Age -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Age: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.Age}" TextColor="{StaticResource Black}"/>
-                                    <Span Text=" years old" TextColor="{StaticResource Black}"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <dxe:TextEdit LabelText="Full Name"
+                                      Text="{Binding SelectedUser.FullName}"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      HelpText="Double tap to edit">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
 
-                        <!-- User ID -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="User ID: " FontAttributes="Bold" TextColor="{StaticResource Gray500}"/>
-                                    <Span Text="{Binding SelectedUser.Id}" TextColor="{StaticResource Gray400}" FontSize="12"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
+                        <!-- Email -->
+                        <dxe:TextEdit LabelText="Email"
+                                      Text="{Binding SelectedUser.Email}"
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      Keyboard="Email">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
+
+                        <!-- Username -->
+                        <dxe:TextEdit LabelText="Username"
+                                      Text="{Binding SelectedUser.Username}"
+                                      IsReadOnly="{Binding IsNotEditing}">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
+
+                        <!-- Date Of Birth -->
+                        <Grid>
+                            <dxe:DateEdit LabelText="Date Of Birth"
+                                          Date="{Binding SelectedUser.DateOfBirth}"
+                                          IsReadOnly="{Binding IsNotEditing}"
+                                          DisplayFormat="dd/MM/yyyy"/>
+                            
+                            <!-- Overlay for gesture when not editing -->
+                            <Grid BackgroundColor="Transparent" IsVisible="{Binding IsNotEditing}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Grid>
+
+                        <!-- Gender -->
+                        <Grid>
+                            <dxe:ComboBoxEdit LabelText="Gender"
+                                              SelectedItem="{Binding SelectedUser.Gender}"
+                                              IsReadOnly="{Binding IsNotEditing}"
+                                              IsFilterEnabled="False">
+                                <dxe:ComboBoxEdit.ItemsSource>
+                                    <x:Array Type="{x:Type enums:Gender}">
+                                        <enums:Gender>Male</enums:Gender>
+                                        <enums:Gender>Female</enums:Gender>
+                                        <enums:Gender>Other</enums:Gender>
+                                        <enums:Gender>PreferNotToSay</enums:Gender>
+                                    </x:Array>
+                                </dxe:ComboBoxEdit.ItemsSource>
+                            </dxe:ComboBoxEdit>
+                            
+                             <!-- Overlay for gesture when not editing -->
+                            <Grid BackgroundColor="Transparent" IsVisible="{Binding IsNotEditing}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Grid>
+
+                        <!-- ID (ReadOnly) -->
+                        <Label Text="{Binding SelectedUser.Id, StringFormat='ID: {0}'}" 
+                               TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+
                     </VerticalStackLayout>
-                    
-                    <!-- CLOSE BUTTON -->
-                    <Button Text="Close" 
-                            Command="{Binding ClosePopupCommand}"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="{StaticResource White}"
-                            CornerRadius="10"
-                            HeightRequest="45"
-                            Margin="0,15,0,0"/>
+
+                    <!-- BUTTONS -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        
+                        <!-- Close Button (Visible when NOT Editing) -->
+                        <Button Grid.Column="0" Grid.ColumnSpan="2"
+                                Text="Close"
+                                Command="{Binding ClosePopupCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                IsVisible="{Binding IsNotEditing}"/>
+
+                        <!-- Cancel Button (Visible when Editing) -->
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                Command="{Binding CancelEditCommand}"
+                                BackgroundColor="#E0E0E0"
+                                TextColor="Black"
+                                IsVisible="{Binding IsEditing}"/>
+
+                        <!-- Save Button (Visible when Editing) -->
+                        <Button Grid.Column="1"
+                                Text="Save"
+                                Command="{Binding SaveUserCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                IsVisible="{Binding IsEditing}"/>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
-        </Grid>
-        
+        </dxco:DXPopup>
+
     </Grid>
-    <!-- END ROOT GRID -->
 </ContentPage>

@@ -18,6 +18,7 @@ public class NavigationService : INavigationService
         { typeof(DemoPageViewModel), nameof(DemoPage) },
         { typeof(LoginPageViewModel), nameof(LoginPage) },
         { typeof(AddProductPageViewModel), nameof(AddProductPage) },
+        { typeof(UserAnalyticsPageViewModel), nameof(UserAnalyticsPage) }   
     };
 
     public NavigationService()

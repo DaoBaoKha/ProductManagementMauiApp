@@ -1,3 +1,5 @@
+using MauiApp1.AppLogic.Enums;
+
 namespace MauiApp1.AppLogic.DTOs;
 
 /// <summary>
@@ -6,12 +8,13 @@ namespace MauiApp1.AppLogic.DTOs;
 public record UserDto
 {
     public string Id { get; init; } = string.Empty;
-    public string Username { get; init; } = string.Empty;
-    public string Email { get; init; } = string.Empty;
-    public string FullName { get; init; } = string.Empty;
-    public DateTime DateOfBirth { get; init; }
+    public string Username { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public DateTime DateOfBirth { get; set; }
+    public Gender Gender { get; set; } = Gender.PreferNotToSay; // Default
     public int Age => CalculateAge(DateOfBirth);
-    public string AvatarUrl { get; init; } = string.Empty;
+    public string AvatarUrl { get; set; } = string.Empty;
 
     private static int CalculateAge(DateTime birthDate)
     {
@@ -31,6 +34,7 @@ public record CreateUserDto
     public string Email { get; init; } = string.Empty;
     public string FullName { get; init; } = string.Empty;
     public DateTime DateOfBirth { get; init; }
+    public Gender Gender { get; init; } = Gender.PreferNotToSay;
     public string AvatarUrl { get; init; } = string.Empty;
 }
 
@@ -41,5 +45,6 @@ public record UpdateUserDto
 {
     public string FullName { get; init; } = string.Empty;
     public DateTime DateOfBirth { get; init; }
+    public Gender Gender { get; init; }
     public string AvatarUrl { get; init; } = string.Empty;
 }

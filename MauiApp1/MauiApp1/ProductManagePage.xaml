@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dtos="clr-namespace:MauiApp1.AppLogic.DTOs"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             xmlns:dxg="clr-namespace:DevExpress.Maui.DataGrid;assembly=DevExpress.Maui.DataGrid"
+             xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
              x:DataType="viewmodels:ProductManagePageViewModel"
              x:Class="MauiApp1.ProductManagePage"
              Title="Product Manage Page">
@@ -25,124 +27,70 @@
                    TextColor="{StaticResource Primary}"/>
 
             <!-- SEARCH BAR -->
-            <SearchBar Grid.Row="1"
-                       Placeholder="Search products..."
-                       PlaceholderColor="{StaticResource Gray400}"
-                       TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-                       SearchCommand="{Binding SearchProductCommand}"
-                       SearchCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                       Margin="20,0,20,10"
-                       HeightRequest="45">
-                <SearchBar.Shadow>
-                    <Shadow Brush="Gray" Offset="0,2" Radius="4" Opacity="0.2" />
-                </SearchBar.Shadow>
-            </SearchBar>
+            <dxe:TextEdit Grid.Row="1"
+                          PlaceholderText="Search products..."
+                          Text="{Binding SearchText, Mode=TwoWay}"
+                          BoxMode="Filled"
+                          CornerRadius="10"
+                          Margin="20,0,20,10"
+                          StartIcon="search_icon.png" 
+                          ClearIconVisibility="Auto"/>
 
             <RefreshView Grid.Row="2"
                          IsRefreshing="{Binding IsRefreshing}"
                          Command="{Binding LoadProductCommand}">
 
-                <!-- PRODUCT LIST -->
-                <CollectionView ItemsSource="{Binding Products}"
-                                    SelectionMode="Single"
-                                    SelectionChangedCommand="{Binding SelectedProductCommand}"
-                                    SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <dxg:DataGridView ItemsSource="{Binding Products}"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding SelectedProduct, Mode=TwoWay}"
+                                  AllowSort="True"
+                                  IsColumnHeaderVisible="True"
+                                  RowHeight="80"
+                                  Tap="OnDataGridTap">
 
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Image Source="no_data.png" 
-                                   HeightRequest="100" />
-                            <Label Text="No products available." 
-                                   FontSize="18" 
-                                   TextColor="{StaticResource Gray400}"/>
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-
-                    <!-- PRODUCT ITEM -->
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="dtos:ProductDto">
-                            
-                            <!-- SWIPEVIEW -->
-                            <SwipeView>
-                                <!-- RIGHTITEMS -->
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Reveal">
-                                        <SwipeItemView>
-                                            <Grid WidthRequest="100" Padding="10">
-
-                                                <!-- DELETE BUTTON -->
-                                                <Button Text="Delete" 
-                                                        BackgroundColor="{StaticResource Error}" 
-                                                        TextColor="{StaticResource White}"  
-                                                        FontSize="14"
-                                                        FontAttributes="Bold"
-                                                        WidthRequest="80"
-                                                        HeightRequest="40"
-                                                        CornerRadius="8"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center"
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductManagePageViewModel}}, Path=DeleteProductCommand}"
-                                                        CommandParameter="{Binding .}"/>
-
-                                            </Grid>
-                                        </SwipeItemView>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-
-                                <!-- ITEM MAIN CONTENT -->
-                                    <Border Margin="10"
-                                    Padding="10"
-                                    Stroke="{StaticResource Gray100}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 5">
-                                        
-                                    <Border.Shadow>
-                                        <Shadow Brush="Gray" Offset="2,2" Radius="4" Opacity="0.3" />
-                                    </Border.Shadow>
-
-                                    <Grid ColumnDefinitions="Auto, *">
-
-                                        <Image Grid.Column="0"
-                                           Source="dotnet_bot.png"
-                                           HeightRequest="50"
-                                           WidthRequest="50"
-                                           Margin="0,0,10,0"/>
-
-                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                            <Label Text="{Binding Name}" 
-                                               FontSize="18" 
-                                               FontAttributes="Bold" 
-                                               TextColor="{StaticResource Gray900}"/>
-                                            <Label Text="{Binding Description}" 
-                                               FontSize="14" 
-                                               TextColor="{StaticResource Gray500}"/>
-                                            <Label Text="{Binding Price, StringFormat='Price: {0:C}'}" 
-                                               FontSize="16" 
-                                               TextColor="{StaticResource Gray500}"/>
-                                        </VerticalStackLayout>
+                    <dxg:DataGridView.Columns>
 
 
-                                        <Button Grid.Column="2" 
-                                            Text="View Detail" 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductManagePageViewModel}}, Path=ShowProductDetailsCommand}"
-                                            CommandParameter="{Binding .}"
-                                            BackgroundColor="{StaticResource Primary}" 
-                                            TextColor="{StaticResource White}" 
-                                            FontSize="14" 
-                                            HeightRequest="30" 
-                                            WidthRequest="85"
-                                            Padding="0"
-                                            Margin="200,0,0,0"
-                                            VerticalOptions="Center"/>
 
-                                    </Grid>
-                                </Border>
-                            </SwipeView>
-                            
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                        <!-- Name Column -->
+                        <dxg:TextColumn FieldName="Name" 
+                                        Caption="Product Name" 
+                                        Width="*"/>
+
+                        <!-- Price Column -->
+                        <dxg:TextColumn FieldName="Price" 
+                                        Caption="Price" 
+                                        Width="100" 
+                                        DisplayFormat="C"/>
+
+                        <!-- Status Column -->
+                        <dxg:TemplateColumn Caption="Status" Width="90">
+                            <dxg:TemplateColumn.DisplayTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="#E8F5E9" 
+                                            StrokeShape="RoundRectangle 10" 
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            Padding="10,4">
+                                        <Label Text="Active" 
+                                               TextColor="#2E7D32" 
+                                               FontSize="11" 
+                                               FontAttributes="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </dxg:TemplateColumn.DisplayTemplate>
+                        </dxg:TemplateColumn>
+
+                    </dxg:DataGridView.Columns>
+
+                    <dxg:DataGridView.EndSwipeItems>
+                        <dxg:SwipeItem Caption="Delete"
+                                       BackgroundColor="{StaticResource Error}"
+                                       Command="{Binding DeleteProductCommand}"/>
+                    </dxg:DataGridView.EndSwipeItems>
+
+                </dxg:DataGridView>
             </RefreshView>
         </Grid>
 
@@ -169,95 +117,111 @@
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
 
-                    <Image Source="dotnet_bot.png"
-                           HeightRequest="100"
-                           WidthRequest="100"
-                           HorizontalOptions="Center"/>
+                    <Border StrokeShape="Ellipse"
+                            Stroke="LightGray"
+                            StrokeThickness="2"
+                            BackgroundColor="#F5F5F5"
+                            HeightRequest="120"
+                            WidthRequest="120"
+                            HorizontalOptions="Center">
+                        <Image Source="{Binding SelectedProduct.ImageUrl}"
+                               Aspect="AspectFill"
+                               HeightRequest="120"
+                               WidthRequest="120">
+                            <Image.Clip>
+                                <EllipseGeometry Center="60,60" RadiusX="60" RadiusY="60"/>
+                            </Image.Clip>
+                        </Image>
+                    </Border>
 
-                    <VerticalStackLayout Spacing="12">
-
+                    <!-- ScrollView for editable content if needed, using VSL for now -->
+                    <VerticalStackLayout Spacing="10">
+                        
                         <!-- Name -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <FormattedString.Spans>
-                                        <Span Text="Name: " FontAttributes="Bold" />
-                                        <Span Text="{Binding SelectedProduct.Name}" />
-                                    </FormattedString.Spans>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <dxe:TextEdit LabelText="Name" 
+                                      Text="{Binding SelectedProduct.Name}" 
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      HelpText="Double tap to edit">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
 
                         <!-- Description -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Description: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.Description}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <dxe:TextEdit LabelText="Description" 
+                                      Text="{Binding SelectedProduct.Description}" 
+                                      IsReadOnly="{Binding IsNotEditing}">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
 
                         <!-- Price -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Price: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.Price, StringFormat='{0:C}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <dxe:TextEdit LabelText="Price" 
+                                      Text="{Binding SelectedProduct.Price, StringFormat='{0:N0}'}" 
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      Keyboard="Numeric">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
 
-                        <!-- StockQuantity -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Stock Quantity: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.StockQuantity}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <!-- Stock -->
+                        <dxe:TextEdit LabelText="Stock Quantity" 
+                                      Text="{Binding SelectedProduct.StockQuantity}" 
+                                      IsReadOnly="{Binding IsNotEditing}"
+                                      Keyboard="Numeric">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
 
-                        <!-- CreatedAt -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Created At: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.CreatedAt, StringFormat='{0:MM/dd/yyyy}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
-                        <!-- UpdatedAt -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Updated At: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.UpdatedAt, StringFormat='{0:MM/dd/yyyy}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        
                         <!-- Status -->
-                        <Label>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Status: " FontAttributes="Bold" />
-                                    <Span Text="{Binding SelectedProduct.Status}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <dxe:TextEdit LabelText="Status" 
+                                      Text="{Binding SelectedProduct.Status}" 
+                                      IsReadOnly="{Binding IsNotEditing}">
+                            <dxe:TextEdit.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EnableEditModeCommand}" NumberOfTapsRequired="2"/>
+                            </dxe:TextEdit.GestureRecognizers>
+                        </dxe:TextEdit>
+
+                        <!-- CreatedAt (ReadOnly) -->
+                        <Label Text="{Binding SelectedProduct.CreatedAt, StringFormat='Created: {0:dd/MM/yyyy}'}" 
+                               TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+                        
+                        <!-- UpdatedAt (ReadOnly) -->
+                        <Label Text="{Binding SelectedProduct.UpdatedAt, StringFormat='Updated: {0:dd/MM/yyyy}'}" 
+                               TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
 
                     </VerticalStackLayout>
 
-                    <Button Text="Close"
-                            Command="{Binding ClosePopupCommand}"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="{StaticResource White}"
-                            FontSize="16"
-                            HeightRequest="40"
-                            HorizontalOptions="Center"
-                            WidthRequest="100"/>
+                    <!-- BUTTONS -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        
+                        <!-- Close Button (Visible when NOT Editing) -->
+                        <Button Grid.Column="0" Grid.ColumnSpan="2"
+                                Text="Close"
+                                Command="{Binding ClosePopupCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                IsVisible="{Binding IsNotEditing}"/>
+
+                        <!-- Cancel Button (Visible when Editing) -->
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                Command="{Binding CancelEditCommand}"
+                                BackgroundColor="#E0E0E0"
+                                TextColor="Black"
+                                IsVisible="{Binding IsEditing}"/>
+
+                        <!-- Save Button (Visible when Editing) -->
+                        <Button Grid.Column="1"
+                                Text="Save"
+                                Command="{Binding SaveProductCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                IsVisible="{Binding IsEditing}"/>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
         </Grid>

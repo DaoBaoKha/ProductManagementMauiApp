@@ -9,4 +9,12 @@ public partial class UserManagePage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
     }
+
+    private void OnDataGridTap(object sender, DevExpress.Maui.DataGrid.DataGridGestureEventArgs e)
+    {
+        if (e.Item != null && BindingContext is UserManagePageViewModel viewModel)
+        {
+            viewModel.ShowUserDetailsCommand.Execute(e.Item);
+        }
+    }
 }

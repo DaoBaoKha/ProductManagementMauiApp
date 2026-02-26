@@ -4,9 +4,24 @@
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
              xmlns:dtos="clr-namespace:MauiApp1.AppLogic.DTOs"
              xmlns:controls="clr-namespace:MauiApp1.Controls"
+             
+             xmlns:dxcore="clr-namespace:DevExpress.Maui.Core;assembly=DevExpress.Maui.Core"
+             
              x:Class="MauiApp1.MainPage"
              x:DataType="viewmodels:MainPageViewModel"
              Title="Main Page">
+
+    <ContentPage.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="dxcore:DXButton">
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Margin" Value="20,0" />
+        </Style>
+    </ContentPage.Resources>
+
     <Grid>
         <RefreshView>
             <VerticalStackLayout Spacing="15">
@@ -18,76 +33,52 @@
                               Loop="True">
                     <CarouselView.ItemTemplate>
                         <DataTemplate x:DataType="dtos:BannerDto">
-                            <Border StrokeShape="RoundRectangle 15" 
-                                    Margin="20,10"
-                                    StrokeThickness="0">
+                            <Border StrokeShape="RoundRectangle 15" Margin="20,10" StrokeThickness="0">
                                 <Grid>
-                                    <Image Source="{Binding ImageUrl}" 
-                                           Aspect="AspectFill" 
-                                           HorizontalOptions="Fill" 
-                                           VerticalOptions="Fill"/>
-
-                                    <BoxView Color="Black" Opacity="0.3" 
-                                             VerticalOptions="End" HeightRequest="50"/>
-
-                                    <Label Text="{Binding Title}" 
-                                           TextColor="{StaticResource White}"
-                                           FontSize="18"
-                                           FontAttributes="Bold"
-                                           VerticalOptions="End"
-                                           Padding="15,10"/>
+                                    <Image Source="{Binding ImageUrl}" Aspect="AspectFill" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                                    <BoxView Color="Black" Opacity="0.3" VerticalOptions="End" HeightRequest="50"/>
+                                    <Label Text="{Binding Title}" TextColor="White" FontSize="18" FontAttributes="Bold" 
+                                           VerticalOptions="End" Padding="15,10"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
                 </CarouselView>
 
-                <IndicatorView x:Name="indicator"
-                               IndicatorColor="{StaticResource Gray300}"
-                               SelectedIndicatorColor="{StaticResource Primary}"
-                               HorizontalOptions="Center" 
-                               Margin="0,0,0,10"/>
-                <Button Text="User Management"
-                        Command="{Binding GoToUserManagePageCommand}"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource White}"
-                        FontSize="18"
-                        HeightRequest="50"
-                        CornerRadius="10"
-                        Margin="20,0" />
+                <IndicatorView x:Name="indicator" IndicatorColor="{StaticResource Gray300}" 
+                               SelectedIndicatorColor="{StaticResource Primary}" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
-                <Button Text="Product Management"
-                        Command="{Binding GoToProductManagePageCommand}"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="{StaticResource White}"
-                        FontSize="18"
-                        HeightRequest="50"
-                        CornerRadius="10"
-                        Margin="20,0" />
+                <dxcore:DXButton Content="User Management"
+                                 Command="{Binding GoToUserManagePageCommand}"
+                                 Style="{StaticResource MenuButtonStyle}" />
+
+                <dxcore:DXButton Content="Product Management"
+                                 Command="{Binding GoToProductManagePageCommand}"
+                                 Style="{StaticResource MenuButtonStyle}" />
+
+                <dxcore:DXButton Content="User Analytics"
+                                 Command="{Binding GoToUserAnalyticsPageCommand}"
+                                 Style="{StaticResource MenuButtonStyle}"
+                                 Margin="20,10,20,0"/>
 
                 <BoxView HeightRequest="1" Color="LightGray" Margin="20,10" />
-                <Label Text="System Connection Test" 
-                       FontSize="16" FontAttributes="Bold" Margin="20,0"/>
 
-                <Button Text="PING GRPC SERVER"
-                        Clicked="OnTestGrpcClicked"
-                        BackgroundColor="Orange" 
-                        TextColor="White"
-                        HeightRequest="45"
-                        CornerRadius="10"
-                        Margin="20,5" />
+                <Label Text="System Connection Test" FontSize="16" FontAttributes="Bold" Margin="20,0"/>
+
+                <dxcore:DXButton Content="PING GRPC SERVER"
+                                 Clicked="OnTestGrpcClicked"
+                                 Style="{StaticResource MenuButtonStyle}"
+                                 BackgroundColor="Orange" 
+                                 HeightRequest="45"
+                                 Margin="20,5" />
 
                 <Label x:Name="GrpcStatusLabel"
                        Text="Status: Ready to test"
-                       FontSize="14"
-                       TextColor="Gray"
-                       HorizontalOptions="Center"
-                       Margin="0,0,0,20"/>
-                
+                       FontSize="14" TextColor="Gray" HorizontalOptions="Center" Margin="0,0,0,20"/>
+
             </VerticalStackLayout>
         </RefreshView>
 
         <controls:ToastNotification x:Name="LoginToast" VerticalOptions="Start" />
-
     </Grid>
 </ContentPage>

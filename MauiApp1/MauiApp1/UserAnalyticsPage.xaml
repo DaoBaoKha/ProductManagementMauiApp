@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dxc="clr-namespace:DevExpress.Maui.Charts;assembly=DevExpress.Maui.Charts"
+             xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             x:Class="MauiApp1.UserAnalyticsPage"
+             x:DataType="viewmodels:UserAnalyticsPageViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <Style x:Key="ChartCardStyle" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+
+            <Setter Property="Stroke" Value="LightGray" />
+            <Setter Property="StrokeThickness" Value="1" />
+
+            <Setter Property="BackgroundColor" Value="White"/>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="10" />
+
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ChartHeaderStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto, Auto, Auto" 
+              Padding="10" 
+              RowSpacing="20">
+
+            <Label Grid.Row="0"
+                   Text="Analytics Dashboard" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"/>
+
+            <Border Grid.Row="1" Style="{StaticResource ChartCardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenChartOptionsCommand}" CommandParameter="Gender Distribution"/>
+                </Border.GestureRecognizers>
+
+                <Grid RowDefinitions="Auto, *">
+                    <Label Grid.Row="0" Text="Gender Distribution" Style="{StaticResource ChartHeaderStyle}"/>
+
+                    <dxc:PieChartView Grid.Row="1" HeightRequest="400">
+                        <dxc:PieChartView.Series>
+                            <dxc:DonutSeries>
+                                <dxc:DonutSeries.Data>
+                                    <dxc:PieSeriesDataAdapter DataSource="{Binding GenderData}"
+                                                              LabelDataMember="GenderLabel"
+                                                              ValueDataMember="Count" />
+                                </dxc:DonutSeries.Data>
+                                <dxc:DonutSeries.Label>
+                                    <dxc:PieSeriesLabel x:Name="SeriesLabel"
+                                                        Position="TwoColumns" 
+                                                        Indent="20"
+                                                        TextPattern="{}{V} ({VP$0}%)"/>
+                                </dxc:DonutSeries.Label>
+                            </dxc:DonutSeries>
+                        </dxc:PieChartView.Series>
+                        <dxc:PieChartView.Legend>
+                            <dxc:Legend HorizontalPosition="Center" 
+                                        VerticalPosition="Bottom" 
+                                        Orientation="LeftToRight"/>
+                        </dxc:PieChartView.Legend>
+                    </dxc:PieChartView>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource ChartCardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenChartOptionsCommand}" CommandParameter="Age Distribution"/>
+                </Border.GestureRecognizers>
+
+                <Grid RowDefinitions="Auto, *">
+                    <Label Grid.Row="0" Text="Age Distribution" Style="{StaticResource ChartHeaderStyle}"/>
+
+                    <dxc:ChartView Grid.Row="1" HeightRequest="300">
+                        <dxc:ChartView.Series>
+                            <dxc:BarSeries>
+                                <dxc:BarSeries.Data>
+                                    <dxc:SeriesDataAdapter DataSource="{Binding AgeData}"
+                                                           ArgumentDataMember="AgeGroup">
+                                        <dxc:SeriesDataAdapter.ValueDataMembers>
+                                            <dxc:ValueDataMember Type="Value" Member="Count"/>
+                                        </dxc:SeriesDataAdapter.ValueDataMembers>
+                                    </dxc:SeriesDataAdapter>
+                                </dxc:BarSeries.Data>
+                                <dxc:BarSeries.Label>
+                                    
+                                    
+                                    <dxc:BarSeriesLabel Visible="True" Position="InsideTop"/>
+                                </dxc:BarSeries.Label>
+                            </dxc:BarSeries>
+                        </dxc:ChartView.Series>
+                        <dxc:ChartView.AxisX>
+                            <dxc:QualitativeAxisX />
+                        </dxc:ChartView.AxisX>
+                    </dxc:ChartView>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

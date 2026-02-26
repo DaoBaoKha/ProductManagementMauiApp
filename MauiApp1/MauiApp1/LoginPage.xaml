@@ -2,57 +2,75 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:MauiApp1.ViewModels"
+             
+             xmlns:dxcore="clr-namespace:DevExpress.Maui.Core;assembly=DevExpress.Maui.Core"
+             xmlns:dxe="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+             
              x:Class="MauiApp1.LoginPage"
              x:DataType="viewmodels:LoginPageViewModel"
              Shell.NavBarIsVisible="False"
-             Title="Login">
-    <Grid RowDefinitions="*, Auto" Padding="30">
-        <VerticalStackLayout>
-            <Image Source="splash.png"
-                   HeightRequest="90"
-                   HorizontalOptions="Center"
-                   Margin="0,0,0,20" />
+             Title="Login"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=Black}">
 
-            <Label Text="Welcome!"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+    <ContentPage.Resources>
 
-            <Label Text="Please log in to continue"
-                   FontSize="26"
-                     HorizontalOptions="Center"
-                     Margin="0,0,0,30" />
+        <Style x:Key="LoginInputStyle" TargetType="dxe:TextEditBase">
+            <Setter Property="BoxMode" Value="Outlined" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+            <Setter Property="FocusedBorderColor" Value="{StaticResource Primary}" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+
+        <Style x:Key="LoginButtonStyle" TargetType="dxcore:DXButton">
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="CornerRadius" Value="25" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="30" Padding="30" VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="10">
+                <Image Source="splash.png"
+                       HeightRequest="90"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Welcome!"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Please log in to continue"
+                       FontSize="18"
+                       TextColor="Gray"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="5">
+
+                <dxe:TextEdit LabelText="Username"
+                              Text="{Binding Username, Mode=TwoWay}"
+                              Style="{StaticResource LoginInputStyle}"
+                              TextFontSize="16"
+                              StartIcon="user_icon.png"/>
+                <dxe:PasswordEdit LabelText="Password"
+                                  Text="{Binding Password, Mode=TwoWay}"
+                                  Style="{StaticResource LoginInputStyle}"
+                                  TextFontSize="16"
+                                  StartIcon="lock_icon.png"/>
+            </VerticalStackLayout>
+
+            <dxcore:DXButton Content="LOGIN"
+                             Command="{Binding LoginCommand}"
+                             Style="{StaticResource LoginButtonStyle}" />
+
         </VerticalStackLayout>
-
-        <VerticalStackLayout>
-            <Label Text="Username" FontSize="18" Margin="20,250,0,5" />
-            <Entry Text="{Binding Username, Mode=TwoWay}"
-                   Placeholder="Enter your username"
-                   FontSize="16"
-                   HeightRequest="50"
-                   Margin="0,0,0,15"
-                   Keyboard="Default" />
-
-            <Label Text="Password" FontSize="18" Margin="20,0,0,5" />
-            <Entry Text="{Binding Password, Mode=TwoWay}"
-                   Placeholder="Enter your password"
-                   FontSize="16"
-                   HeightRequest="50"
-                   IsPassword="True"
-                   Margin="0,0,0,30"
-                   Keyboard="Default" />
-        </VerticalStackLayout>
-
-        <VerticalStackLayout>
-            <Button Text="Login"
-                    Command="{Binding LoginCommand}"
-                    Margin="0,450,0,0"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="{StaticResource White}"
-                    FontSize="18"
-                    HeightRequest="50"
-                    CornerRadius="25" />
-
-        </VerticalStackLayout>
-    </Grid>
+    </ScrollView>
 </ContentPage>

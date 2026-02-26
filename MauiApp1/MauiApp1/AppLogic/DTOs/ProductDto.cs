@@ -4,20 +4,20 @@
     {
         public string Id { get; init; } = string.Empty;
 
-        public string Name { get; init; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public string Description { get; init; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
-        public decimal Price { get; init; }
+        public decimal Price { get; set; }
 
-        public int StockQuantity { get; init; }
+        public int StockQuantity { get; set; }
 
-        public string ImageUrl { get; init; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-        public DateTime UpdatedAt { get; init; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        public string Status { get; init; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 }

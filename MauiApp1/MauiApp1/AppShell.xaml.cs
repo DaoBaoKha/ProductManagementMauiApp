@@ -11,6 +11,7 @@
             Routing.RegisterRoute(nameof(ProductManagePage), typeof(ProductManagePage));
             Routing.RegisterRoute(nameof(ProfileImagePage), typeof(ProfileImagePage));
             Routing.RegisterRoute(nameof(AddUserPage), typeof(AddUserPage));
+            Routing.RegisterRoute(nameof(UserAnalyticsPage), typeof(UserAnalyticsPage));
             Routing.RegisterRoute(nameof(AddProductPage), typeof(AddProductPage));
             Routing.RegisterRoute(nameof(DemoPage), typeof(DemoPage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));

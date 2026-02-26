@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MauiApp1.AppLogic.Enums;
 using MauiApp1.Messages;
 using MauiApp1.Services;
 using System.Text.RegularExpressions;
@@ -31,6 +32,9 @@ namespace MauiApp1.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsEmailValid), nameof(IsFormValid))]
         private string email = string.Empty;
+
+        [ObservableProperty]
+        private Gender gender = Gender.PreferNotToSay;
 
         /// <summary>
         /// Name is valid if not empty and contains no numbers
@@ -71,6 +75,7 @@ namespace MauiApp1.ViewModels
             // Clear form after save
             Name = string.Empty;
             Email = string.Empty;
+            Gender = Gender.PreferNotToSay;
         }
     }
 }

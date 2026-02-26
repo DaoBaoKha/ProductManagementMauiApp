@@ -19,6 +19,9 @@ namespace MauiApp1.ViewModels
         [ObservableProperty]
         ProductDto selectedProduct;
 
+        [ObservableProperty]
+        string searchText;
+
         public ObservableCollection<ProductDto> Products { get; } = new();
 
         private List<ProductDto> AllProducts { get; set; } = new();
@@ -29,6 +32,12 @@ namespace MauiApp1.ViewModels
             _navigationService = navigationService;
 
             Task.Run(async () => await LoadProduct());
+        }
+
+        // Auto-search when SearchText changes
+        partial void OnSearchTextChanged(string value)
+        {
+            SearchProduct(value);
         }
 
         [RelayCommand]
@@ -45,9 +54,9 @@ namespace MauiApp1.ViewModels
                 Id = "1",
                 Name = "Coca Cola",
                 Description = "Beverage Drink",
-                Price = 19.99m,
+                Price = 6.99m,
                 StockQuantity = 100,
-                ImageUrl = "https://example.com/productA.png",
+                ImageUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194801.jpg",
                 CreatedAt = DateTime.Now.AddDays(-10),
                 UpdatedAt = DateTime.Now,
                 Status = "Active"
@@ -58,21 +67,27 @@ namespace MauiApp1.ViewModels
                 Id = "2",
                 Name = "Pepsi",
                 Description = "Beverage Drink",
-                Price = 19.99m,
+                Price = 7.00m,
                 StockQuantity = 100,
-                ImageUrl = "https://example.com/productA.png",
+                ImageUrl = "https://img.freepik.com/premium-vector/character-avatar-isolated_729149-194802.jpg",
                 CreatedAt = DateTime.Now.AddDays(-10),
                 UpdatedAt = DateTime.Now,
                 Status = "Active"
             };
 
-            AllProducts.Add(product1);
-            AllProducts.Add(product2);
-            
-            Products.Add(product1);
-            Products.Add(product2);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                AllProducts.Clear();
+                Products.Clear();
 
-            IsRefreshing = false;
+                AllProducts.Add(product1);
+                AllProducts.Add(product2);
+
+                Products.Add(product1);
+                Products.Add(product2);
+
+                IsRefreshing = false;
+            });
         }
 
         [RelayCommand]
@@ -95,6 +110,35 @@ namespace MauiApp1.ViewModels
         void ClosePopup()
         {
             IsPopupOpen = false;
+        }
+
+        // Edit Mode Logic
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotEditing))]
+        bool isEditing;
+
+        public bool IsNotEditing => !IsEditing;
+
+        [RelayCommand]
+        void EnableEditMode()
+        {
+            if (!IsEditing) IsEditing = true;
+        }
+
+        [RelayCommand]
+        async Task SaveProduct()
+        {
+            // Simulate Save
+            IsEditing = false;
+            // Here you would call API to update SelectedProduct
+            await Application.Current.MainPage.DisplayAlert("Success", "Product Updated", "OK");
+        }
+
+        [RelayCommand]
+        void CancelEdit()
+        {
+            IsEditing = false;
+            // Ideally revert changes here if DTO was modified directly
         }
 
         [RelayCommand]

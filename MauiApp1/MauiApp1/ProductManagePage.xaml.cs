@@ -9,4 +9,12 @@ public partial class ProductManagePage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
     }
+
+    private void OnDataGridTap(object sender, DevExpress.Maui.DataGrid.DataGridGestureEventArgs e)
+    {
+        if (e.Item != null && BindingContext is ProductManagePageViewModel viewModel)
+        {
+            viewModel.ShowProductDetailsCommand.Execute(e.Item);
+        }
+    }
 }
